@@ -55,6 +55,8 @@ A self-service engineering platform, <a href="https://meshery.io">Meshery</a>, i
 
 <br />
 <br />
+
+- [Design specification for Helm Kanvas Snapshot](https://docs.google.com/document/d/1NdgLoOS3Xy1Z3vwB1dnZ9ETyKCrSinVgAzL8UO3UeQk/edit)
 <!--
 - [Functionality](#functionality)
   - [Meshery Architecture](#meshery-architecture)
