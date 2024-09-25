@@ -1,0 +1,43 @@
+{
+  "name": "provider-ui",
+  "version": "1.0.0",
+  "description": "the service mesh management plane",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node ui_dev_server.js",
+    "build": "npm run clean && next build",
+    "export": "next export",
+    "start": "NODE_ENV=production node server.js",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "clean": "rm -rf .next,out"
+  },
+  "keywords": [],
+  "author": "Layer5",
+  "repository": "https://github.com/meshery/meshery",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@babel/eslint-parser": "^7.25.1",
+    "@emotion/cache": "^11.10.5",
+    "@emotion/react": "^11.13.0",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.16",
+    "@mui/material": "^5.15.11",
+    "babel-plugin-istanbul": "^6.1.1",
+    "http-proxy": "^1.18.1",
+    "isomorphic-unfetch": "^4.0.2",
+    "next": "^13.5.4",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.7",
+    "start-server-and-test": "^2.0.5"
+  },
+  "engines": {
+    "node": "^16 || ^18"
+  }
+}

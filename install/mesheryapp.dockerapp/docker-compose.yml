@@ -1,0 +1,53 @@
+services:
+  meshery:
+    image: layer5/meshery:stable-latest
+    labels:
+      - ${labels.watchtower}
+    environment:
+      - "PROVIDER_BASE_URLS=https://meshery.layer5.io"
+      - "ADAPTER_URLS=meshery-istio:10000 meshery-linkerd:10001 meshery-consul:10002 meshery-nsm:10004"
+      - "EVENT=mesheryLocal"
+    ports:
+      - "${meshery.port}:8080"
+  meshery-istio:
+    image: layer5/meshery-istio:stable-latest
+    labels:
+      - ${labels.watchtower}
+    ports:
+      - "${istio.port}:10000"
+    x-enabled: ${istio.enabled}
+  meshery-linkerd:
+    image: layer5/meshery-linkerd:stable-latest
+    labels:
+      - ${labels.watchtower}
+    ports:
+      - "${linkerd.port}:10001"
+    x-enabled: ${linkerd.enabled}
+  meshery-consul:
+    image: layer5/meshery-consul:stable-latest
+    labels:
+      - ${labels.watchtower}
+    ports:
+      - "${consul.port}:10002"
+    x-enabled: ${consul.enabled}
+  meshery-nsm:
+    image: layer5/meshery-nsm:stable-latest
+    labels:
+      - ${labels.watchtower}
+    ports:
+      - "${nsm.port}:10004"
+    x-enabled: ${nsm.enabled}
+  meshery-nighthawk:
+    image: meshery/meshery-nighthawk:edge-latest
+    labels:
+      - ${labels.watchtower}
+    ports:
+      - "${nighthwak.port}:10013"
+    x-enabled: ${nighthawk.enabled}
+  watchtower:
+    image: containrrr/watchtower
+    labels:
+      - ${labels.watchtower}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --label-enable

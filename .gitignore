@@ -1,0 +1,80 @@
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+.DS_Store
+
+.vscode/
+
+*.config
+
+Chart.min.js
+
+fortio_chart.js
+
+# UI
+**/node_modules/
+**/out/
+
+**/ui/playground/
+ui/.next/
+ui/out/
+ui/node_modules/
+
+provider-ui/out/
+provider-ui/.next/
+provider-ui/node_modules/
+
+# mesheryctl
+mesheryctl/cmd/mesheryctl/mesheryctl
+mesheryctl/.meshery/
+mesheryctl/mesheryctl
+mesheryctl/default.profraw
+main
+
+# Meshery
+cmd/meshery
+
+log.txt
+
+# Docs
+docs/_site
+docs/.sass-cache
+docs/.jekyll-metadata
+docs/.jekyll-cache
+
+docs/v0.4
+docs/v0.5
+docs/v0.6
+docs/v0.*
+
+dist/
+
+*/npm-debug.log
+
+**/.idea
+
+yarn.lock
+
+# Generated binaries
+**/bin
+*.Identifier
+
+default.profraw
+**errorutil_analyze_errors.json
+**errorutil_analyze_summary.json
+**errorutil_errors_export.json
+.ruby-version
+
+wasm/policies/temp-bundle-extract-dir/**
+.nvim.lua

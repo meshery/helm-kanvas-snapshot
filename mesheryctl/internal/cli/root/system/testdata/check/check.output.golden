@@ -1,0 +1,19 @@
+
+Docker 
+--------------
+✓ Docker is running
+✓ docker-compose is available
+
+Kubernetes API 
+--------------
+✓ can initialize Kubernetes client
+!! cannot query the Kubernetes API
+
+Kubernetes Version 
+--------------
+!! cannot check Kubernetes version
+!! exit status 1
+
+--------------
+--------------
+✓✓ Meshery prerequisites met
