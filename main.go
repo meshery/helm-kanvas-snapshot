@@ -200,7 +200,7 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 			"application_type": "Helm Chart",
 			"designID":         designID,
 			"email":            email,
-			// "assetLocation":    assetLocation,
+			"assetLocation":    assetLocation,
 		},
 	}
 
