@@ -79,4 +79,3 @@ default.profraw
 wasm/policies/temp-bundle-extract-dir/**
 .nvim.lua
 
-env.mk
