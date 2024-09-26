@@ -75,7 +75,7 @@ scoops:
       name: scoop-bucket
 
     commit_author:
-      name: kanvas-snapshotreleaser
+      name: kanvas-snapshot releaser
       email: developers@meshery.io
 
     homepage: "https://meshery.io"
