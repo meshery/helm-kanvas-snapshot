@@ -5,7 +5,7 @@ before:
     - go mod tidy
 
 builds:
-  - main: main.go
+  - main: ./main.go
 
     env:
       - CGO_ENABLED=0
@@ -68,4 +68,3 @@ changelog:
 
 release:
   name_template: "Kanvas Snapshot {{.Tag}}"
-
