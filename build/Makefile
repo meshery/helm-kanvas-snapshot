@@ -45,3 +45,56 @@ ifeq (,$(findstring $(GOVERSION), $(INSTALLED_GO_VERSION)))
 	@echo "GOVERSION: " $(GOVERSION)
 	@echo "INSTALLED_GO_VERSION: " $(INSTALLED_GO_VERSION)
 endif
+
+
+OUTDIR := kanvas-snapshot/bin
+ARCH := amd64
+
+BINNAME_DARWIN ?= kanvas-snapshot-darwin-$(ARCH)
+BINNAME_LINUX ?= kanvas-snapshot-linux-$(ARCH)
+BINNAME_WINDOWS ?= kanvas-snapshot-windows-$(ARCH).exe
+
+
+LDFLAGS := "\
+    -X 'main.GithubToken=$(GITHUB_TOKEN)' \
+    -X 'main.MesheryCloudApiCookie=$(MESHERY_CLOUD_API_COOKIE)' \
+    -X 'main.MesheryApiCookie=$(MESHERY_API_COOKIE)' \
+    -X 'main.Owner=$(OWNER)' \
+    -X 'main.Repo=$(REPO)' \
+    -X 'main.Workflow=$(WORKFLOW)' \
+    -X 'main.Branch=$(BRANCH)' \
+    -X 'main.MesheryCloudApiBaseUrl=$(MESHERY_CLOUD_API_BASE_URL)' \
+	-X 'main.MesheryApiBaseUrl=$(MESHERY_API_BASE_URL)' \
+    -X 'main.SystemID=$(SYSTEM_ID)'"		
+
+.PHONY: build
+build:
+	@echo "Building for all platforms..."
+	@echo "GITHUB_TOKEN: $(GITHUB_TOKEN) "
+	@$(MAKE) $(BINNAME_DARWIN)
+	@$(MAKE) $(BINNAME_LINUX)
+	@$(MAKE) $(BINNAME_WINDOWS)
+
+# Build Helm plugin for Darwin (macOS)
+.PHONY: $(BINNAME_DARWIN)
+$(BINNAME_DARWIN):
+	@echo "Building for Darwin..."
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=darwin go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_DARWIN) 
+
+# Build Helm plugin for Linux
+.PHONY: $(BINNAME_LINUX)
+$(BINNAME_LINUX):
+	@echo "Building for Linux..."
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=linux go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_LINUX) 
+
+# Build Helm plugin for Windows
+.PHONY: $(BINNAME_WINDOWS)
+$(BINNAME_WINDOWS):
+	@echo "Building for Windows..."
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=windows go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_WINDOWS) 
+
+# Clean up binaries
+.PHONY: clean
+clean:
+	@echo "Cleaning up..."
+	rm -rf $(OUTDIR)
