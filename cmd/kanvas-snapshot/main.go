@@ -34,9 +34,9 @@ var (
 )
 
 var (
-	chartURI string
-	email    string
-	name     string
+	chartURI   string
+	email      string
+	designName string
 )
 
 var generateKanvasSnapshotCmd = &cobra.Command{
@@ -58,15 +58,14 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 		Log = log.SetupMeshkitLogger("kanvas-snapshot", false, os.Stdout)
-
 		// Use the extracted name from URI if not provided
-		if name == "" {
-			name = ExtractNameFromURI(chartURI)
-			Log.Warnf("No name provided. Using extracted name: %s", name)
+		if designName == "" {
+			designName = ExtractNameFromURI(chartURI)
+			Log.Warnf("No name provided. Using extracted name: %s", designName)
 		}
 
 		// Create Meshery Snapshot
-		designID, err := CreateMesheryDesign(chartURI, name, email)
+		designID, err := CreateMesheryDesign(chartURI, designName, email)
 		if err != nil {
 			handleError(errors.ErrCreatingMesheryDesign(err))
 		}
@@ -150,12 +149,15 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 
 	payloadBytes, err := json.Marshal(payload)
 	if err != nil {
-		return "", err
+		LogError.Error(err)
+		os.Exit(1)
 	}
 	sourceType := "Helm Chart"
+	Log.Info("Here111")
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/pattern/%s", MesheryApiBaseUrl, sourceType), bytes.NewBuffer(payloadBytes))
 	if err != nil {
-		return "", err
+		LogError.Error(err)
+		os.Exit(1)
 	}
 
 	req.Header.Set("Cookie", MesheryApiCookie)
@@ -246,10 +248,11 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 func main() {
 
 	generateKanvasSnapshotCmd.Flags().StringVarP(&chartURI, "file", "f", "", "URI to Helm chart (required)")
-	generateKanvasSnapshotCmd.Flags().StringVarP(&name, "name", "n", "", "Optional name for the Meshery design")
+	generateKanvasSnapshotCmd.Flags().StringVarP(&designName, "design-name", "l", "", "Optional name for the Meshery design")
 	generateKanvasSnapshotCmd.Flags().StringVarP(&email, "email", "e", "", "Optional email to associate with the Meshery design")
 
 	generateKanvasSnapshotCmd.MarkFlagRequired("file")
+	generateKanvasSnapshotCmd.MarkFlagRequired("email")
 
 	if err := generateKanvasSnapshotCmd.Execute(); err != nil {
 		LogError.Error(err)
