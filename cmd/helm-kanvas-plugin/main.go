@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -13,7 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"log"
+	"github.com/layer5io/meshkit/logger"
+	"github.com/meshery/helm-kanvas-snapshot/internal/errors"
+	"github.com/meshery/helm-kanvas-snapshot/internal/log"
 )
 
 var (
@@ -30,6 +31,8 @@ var (
 	SystemID               string
 	HelmPluginDir          string
 	logFilePath            string
+	Log                    logger.Handler
+	LogError               logger.Handler
 )
 
 type Config struct {
@@ -64,7 +67,6 @@ func loader(duration time.Duration) {
 		progress++
 	}
 
-	log.Println("\nLoading complete!")
 }
 
 func printProgressBar(progress, total int) {
@@ -74,7 +76,7 @@ func printProgressBar(progress, total int) {
 	barProgress := int(percentage * float64(barWidth))
 
 	bar := "[" + fmt.Sprintf("%s%s", repeat("=", barProgress), repeat("-", barWidth-barProgress)) + "]"
-	fmt.Printf("\rProgress %s %.2f%% Complete", bar, percentage*100)
+	Log.Infof("\rProgress %s %.2f%% Complete", bar, percentage*100)
 }
 
 // Helper function to repeat a character n times
@@ -89,7 +91,7 @@ func repeat(char string, times int) string {
 func CreateLogFile() error {
 	cwd, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("failed to get current working directory: %w", err)
+		return errors.ErrGettingCWD(err)
 	}
 
 	logDir := filepath.Join(fmt.Sprintf("%s/snapshot", cwd), "log")
@@ -108,12 +110,12 @@ func CreateLogFile() error {
 	if _, err := os.Stat(logFilePath); os.IsNotExist(err) {
 		file, err := os.Create(logFilePath)
 		if err != nil {
-			return fmt.Errorf("failed to create log file: %w", err)
+			return errors.ErrCreatingLogFile(err, logFilePath)
 		}
 		file.Close()
 	}
 
-	log.Println(fmt.Printf("Log file created successfully at: %s\n", logFilePath))
+	Log.Infof("Log file created successfully at: %s\n", logFilePath)
 	return nil
 }
 
@@ -125,7 +127,7 @@ func ExtractNameFromURI(uri string) string {
 
 func handleError(err error) {
 	if err != nil {
-		log.Fatal(err)
+		LogError.Error(err)
 
 		// Check if the log file exists before writing to it
 		if _, fileErr := os.Stat(logFilePath); !os.IsNotExist(fileErr) {
@@ -135,7 +137,6 @@ func handleError(err error) {
 	}
 }
 
-// CreateMesheryDesign creates a Meshery Design via API
 func CreateMesheryDesign(uri, name, email string) (string, error) {
 	payload := MesheryDesignPayload{
 		Save:  true,
@@ -169,8 +170,8 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-		return "", fmt.Errorf("failed to create meshery design. response: %s", string(body))
+		io.ReadAll(resp.Body)
+		return "", err
 	}
 	// Expecting a JSON array in the response
 	var result []map[string]interface{}
@@ -185,7 +186,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 		}
 	}
 
-	return "", errors.New("invalid response from meshery API")
+	return "", errors.ErrHTTPPostRequest(err)
 }
 
 func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
@@ -232,14 +233,15 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		body, _ := io.ReadAll(resp.Body)
-		return fmt.Errorf("failed to dispatch workflow. response: %s", string(body))
+		_, err := io.ReadAll(resp.Body)
+		return err
 	}
 
 	return nil
 }
 
 func main() {
+	Log = log.SetupMeshkitLogger("kanvas-snapshot", false, os.Stdout)
 
 	chartURI := flag.String("f", "", "URI to Helm chart")
 	name := flag.String("n", "", "Optional name for the Meshery design")
@@ -247,25 +249,22 @@ func main() {
 	flag.Parse()
 
 	if chartURI == nil || *chartURI == "" {
-		log.Println("url to helm chart is required")
+		Log.Info("url to helm chart is required")
 		os.Exit(1)
 	}
 
-	err := CreateLogFile()
-	if err != nil {
-		log.Fatalf("Error creating log file: %v\n", err)
-	}
+	CreateLogFile()
 
 	// Use the extracted name from URI if not provided
 	if name == nil || *name == "" {
 		*name = ExtractNameFromURI(*chartURI)
-		log.Printf("No name provided. Using extracted name: %s", *name)
+		Log.Warnf("No name provided. Using extracted name: %s", *name)
 	}
 
 	// Create Meshery Snapshot
 	designID, err := CreateMesheryDesign(*chartURI, *name, *email)
 	if err != nil {
-		handleError(err)
+		handleError(errors.ErrCreatingMesheryDesign(err))
 	}
 
 	assetLocation := fmt.Sprintf("https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/action-assets/%s.png", designID)
@@ -273,19 +272,19 @@ func main() {
 	// Generate Snapshot
 	err = GenerateSnapshot(designID, *chartURI, *email, assetLocation)
 	if err != nil {
-		handleError(err)
+		handleError(errors.ErrGeneratingSnapshot(err))
 	}
 
 	if *email == "" {
 		loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
-		log.Printf("\nSnapshot generated successfully. Snapshot URL: %s\n", assetLocation)
+		Log.Infof("\nSnapshot generated successfully. Snapshot URL: %s\n", assetLocation)
 	} else {
-		log.Println("An email will be sent to the provided email containing the snapshot in a few minutes.")
+		Log.Info("An email will be sent to the provided email containing the snapshot in a few minutes.")
 	}
 
 	err = os.Remove(logFilePath)
 	if err != nil {
-		handleError(err)
+		handleError(errors.ErrRemovingFile(err, logFilePath))
 	}
 
 }
