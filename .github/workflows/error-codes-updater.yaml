@@ -65,4 +65,4 @@ jobs:
           commit_user_email: ci@layer5.io
           commit_author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           commit_options: "--signoff"
-          commit_message: "[Error Codes]: Update Meshery server and mehseryctl error codes and reference"
+          commit_message: "[Error Codes]: Update Helm Kanvas Snapshot error codes and reference"
