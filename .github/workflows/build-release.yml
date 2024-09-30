@@ -7,7 +7,7 @@ on:
 jobs:
   notfiy-build:
     name: Notify providers for Meshery Extensions channel build
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
     - name: trigger plugins for edge

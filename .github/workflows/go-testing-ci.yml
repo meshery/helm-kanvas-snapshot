@@ -24,7 +24,7 @@ jobs:
         go: [1.21]
         os: [ubuntu-22.04]
     name: golangci-lint
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-go@v5
@@ -53,7 +53,7 @@ jobs:
       - name: Run coverage
         run: go test --short ./... -race -coverprofile=coverage.txt -covermode=atomic
       - name: Upload coverage to Codecov
-        if: github.repository == 'meshery/meshery'
+        if: github.repository == 'meshery/helm-kanvas-snapshot'
         uses: codecov/codecov-action@v4.3.0
         with:
           files: ./coverage.txt
@@ -103,7 +103,7 @@ jobs:
           echo "Running Mesheryctl with Kubernetes completed."
           
       - name: Upload coverage to Codecov
-        if: github.repository == 'meshery/meshery'
+        if: github.repository == 'meshery/helm-kanvas-snapshot'
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage.txt

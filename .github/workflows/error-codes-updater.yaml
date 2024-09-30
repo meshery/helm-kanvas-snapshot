@@ -14,7 +14,7 @@ on:
 jobs:
   Update-error-codes:
     name: Error codes utility
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@master

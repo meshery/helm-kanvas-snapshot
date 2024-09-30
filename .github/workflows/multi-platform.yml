@@ -36,7 +36,7 @@ env:
 
 jobs:
   print-inputs:
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
 
@@ -51,7 +51,7 @@ jobs:
         echo "Env GITHUB_REF:" ${GITHUB_REF}
   
   docker-build:
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - 

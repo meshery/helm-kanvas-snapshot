@@ -7,7 +7,7 @@ on:
 jobs:
   reset:
     name: reset
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-latest
     steps:
     - name: Cluster cleanup by running the cleanup script inside VM
@@ -22,7 +22,7 @@ jobs:
 # reboot:
 #   name: Reboot Metal servers
 #   needs: reset 
-#   if: github.repository == 'meshery/meshery'
+#   if: github.repository == 'meshery/helm-kanvas-snapshot'
 #   runs-on: ubuntu-latest 
 #   steps:
 #       - name: Download and install Equinix Metal CLI

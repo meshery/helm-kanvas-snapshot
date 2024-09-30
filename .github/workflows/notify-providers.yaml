@@ -12,7 +12,7 @@ on:
 jobs:
   notify-remote-provider-build:
     name: Notify Remote Providers of Release
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
     - name: trigger plugins for edge

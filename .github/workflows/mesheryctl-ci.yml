@@ -20,7 +20,7 @@ on:
 jobs:
   golangci:
     name: golangci-lint
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
           skip-cache: true
   mesheryctl_build:
     name: Mesheryctl build & release
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: macos-latest
     needs: [golangci]
     steps:

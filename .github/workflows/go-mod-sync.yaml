@@ -8,7 +8,7 @@ on:
       - "go.mod"
 jobs:
   sync:
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     name: sync
     runs-on: ubuntu-22.04
     steps:
