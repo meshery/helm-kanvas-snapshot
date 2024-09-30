@@ -1,14 +1,15 @@
 # Meshery Extension: Kanvas Snapshot Helm Plugin
-[Meshery Extensions](https://meshery.io/extension) are plugins or add-ons that enhance the functionality of the Meshery platform beyond its core capabilities.
 
-Types of Extensions:
+[Meshery Extensions](https://meshery.io/extension) are plugins or add-ons that enhance the functionality of the Meshery platform beyond its core capabilities. Meshery supports different types of extensions ([docs](https://docs.meshery.io/extensions/)):
 
-Types of Extensions: Meshery supports different types of extensions, including:
- - [Adapters](https://docs.meshery.io/concepts/architecture/adapters): for interacting with various service meshes and cloud-native projects   
- - [Load Generators]: for performance testing and benchmarking   
- - [Providers]: for connecting to different cloud providers and infrastructure platforms
- - CLI Plugins:
- - UI Plugins:
+- [Adapters](https://docs.meshery.io/concepts/architecture/adapters): Adapters allow Meshery to interface with the different cloud native infrastructure.
+- [Load Generators](https://docs.meshery.io/extensibility/load-generators): for performance characterization and benchmarking
+- [Integrations](https://docs.meshery.io/extensibility/integrations): model-based support for a broad variety of design and orchestration of cloud and cloud native platforms, tools, and technologies.
+- [Providers](https://docs.meshery.io/extensibility/providers): for connecting to different cloud providers and infrastructure platforms
+<!-- TODO: NEW PAGE NEEDED HERE:
+
+- CLI Plugins:  -->
+- [UI Plugins](https://docs.meshery.io/extensibility/ui):
 
 They allow users to customize, extend, and integrate Meshery with other tools and services. Some key points about Meshery Extensions:
 
