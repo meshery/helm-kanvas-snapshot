@@ -1,46 +1,41 @@
 # Meshery Extension: Kanvas Snapshot Helm Plugin
 
-The **Meshery Snapshot Helm Plugin** allows users to generate a visual snapshot of their Helm charts directly from the command line. It simplifies the process of creating Meshery Snapshots, providing a visual representation of packaged Helm charts. This plugin integrates with Meshery Cloud and GitHub Actions to automate the workflow of snapshot creation, which is especially useful for Helm users who need to quickly visualize their chart configurations.
+The **Kanvas Snapshot Helm Plugin** allows users to generate a visual snapshot of their Helm charts directly from the command line. It simplifies the process of creating Meshery Snapshots, providing a visual representation of packaged Helm charts. This plugin integrates with Meshery Cloud and GitHub Actions to automate the workflow of snapshot creation, which is especially useful for Helm users who need to quickly visualize their chart configurations.
 
 **Table of Contents**
 
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
+- [Extension Overview](#extension-overview)
+    - [Features](#features)
+- [Installation](#installation-and-use)
+    - [Prerequites](#prerequisites)
     - [Usage](#usage)
-- [Environment Variables](#environment-variables)
 - [Contributing](#contributing)
-- [License](#license)
 
----
+## Extension Overview
 
-## Overview
+Helm charts can be complex, especially when custom configurations are applied via `values.yaml` files. This Meshery extension bridges the gap between Helm chart configurations and their visual representation by converting Helm charts into **Kanvas Snapshots**. These snapshots can be received either via email or as a URL displayed directly in the terminal.
 
-Helm charts can be complex, especially when custom configurations are applied via `values.yaml` files. This plugin bridges the gap between Helm chart configurations and their visual representation by converting Helm charts into **Meshery Snapshots**. These snapshots can be received either via email or as a URL displayed directly in the terminal.
-
-### Key Features
+### Features
 
 1. **Snapshot Generation:** Create visual snapshots of Helm charts, complete with associated resources.
 2. **Synchronous/Asynchronous Delivery:** Choose between receiving snapshots via email or directly in the terminal.
 3. **Seamless Integration:** Leverages Meshery Cloud and GitHub Actions to handle snapshot rendering.
 4. **Support for Packaged Charts:** Works with both packaged `.tar.gz` charts and unpackaged Helm charts.
 
----
-
-## Installation and Usage
+## Installation and Use
 
 To install the Meshery Snapshot Helm Plugin, use the following steps:
 
-**Prerequisites**
+### Prerequisites
 
-- Helm v3 or later must be installed on your system.
-
-- Meshery Cloud account (optional)
+- `helm` must be [installed]( helm plugin install https://github.com/meshery/helm-kanvas-snapshot) on your system.
+- (Optional) A free [Layer5 Cloud](https://meshery.layer5.io) user account.
+- Environemnt Variables:
+    1. ...?
 
 **Plugin Installation**
 
-1. Open your terminal.
-2. Run the following command to install the Meshery Snapshot Plugin:
+1. Run the following command to install the Helm Kanvas Snapshot plugin:
 
    ```bash
    helm plugin install https://github.com/meshery/helm-kanvas-snapshot
@@ -52,13 +47,11 @@ To install the Meshery Snapshot Helm Plugin, use the following steps:
    helm plugin list
    ```
 
-   You should see the **Meshery Kanvas Snapshot Plugin** listed as `snapshot`.
+   You should see the Kanvas Snapshot listed as `snapshot`.
 
 4. Set up the required environment variables (see the [Environment Variables](#environment-variables) section).
 
----
-
-## Usage
+### Usage
 
 Once the plugin is installed, you can generate a snapshot using either a packaged or unpackaged Helm chart.
 
@@ -67,8 +60,8 @@ helm snapshot -f <chart-URI> [-n <snapshot-name>] [-e <email>]
 ```
 
 - **`-f`**: Path or URL to the Helm chart (required).
-- **`-n`**: Optional name for the snapshot. If not provided, it will be auto-generated based on the chart name.
-- **`-e`**: Optional email address to receive the snapshot. If not provided, the snapshot will be displayed in the terminal.
+- **`-n`**: (Optional) name for the snapshot. If not provided, it will be auto-generated based on the chart name.
+- **`-e`**: (Optional) email address at which to receive the snapshot. If not provided, a link to the snapshot will be displayed in the terminal.
 
 **Example**
 
@@ -84,7 +77,7 @@ Please do! Thank you for your help in improving this Meshery extension! :balloon
 
 Start by forking the repository.
 
-### 1. Fork the Repository
+**1. Fork the Repository**
 
 To get started, you'll first need to clone the Meshery Snapshot Helm Plugin repository from GitHub. Run the following command in your terminal:
 
@@ -92,7 +85,7 @@ To get started, you'll first need to clone the Meshery Snapshot Helm Plugin repo
 git clone https://github.com/layer5labs/meshery-extensions-packages.git
 ```
 
-### 2. Navigate to the Plugin Directory
+**2. Navigate to the Plugin Directory**
 
 Once the repository is cloned, navigate to the `helm-kanvas-snapshot` directory.
 
@@ -100,21 +93,21 @@ Once the repository is cloned, navigate to the `helm-kanvas-snapshot` directory.
 cd helm-kanvas-snapshot
 ```
 
-### 3. Replace the placeholder values with your actual credentials.
+**3. Replace the placeholder values with your actual credentials.**
 
-### 4. Build the binary
+**4. Build the binary**
 
 ```bash
 make
 ```
 
-### 4. Install the Snapshot plugin
+**5. Install the Snapshot plugin**
 
 ```bash
 helm plugin install kanvas-snapshot
 ```
 
-### 5. Test the Plugin Locally
+**6. Test the Plugin Locally**
 
 Once the plugin is built, you can test it locally. For example, to generate a snapshot for a Helm chart, run the following command:
 
@@ -124,7 +117,7 @@ helm kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz -n meshe
 
 This command will trigger the snapshot generation process. If everything is set up correctly, you should see a visual snapshot URL or receive the snapshot via email, depending on the options you specified.
 
-### 7. Debugging
+**7. Debugging**
 
 If you encounter any issues during testing, check the log file generated in the `snapshot-plugin` directory. The logs can provide more insight into any errors that may occur.
 
