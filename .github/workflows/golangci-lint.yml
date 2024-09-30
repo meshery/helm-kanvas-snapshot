@@ -1,4 +1,4 @@
-name: Mesheryctl
+name: Linter
 on:
   push:
     branches:
