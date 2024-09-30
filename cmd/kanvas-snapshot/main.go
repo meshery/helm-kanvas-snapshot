@@ -45,23 +45,23 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 	Long: `Generate a Kanvas snapshot by providing a Helm chart URI.
 	
 		This command allows you to generate a snapshot in Meshery using a Helm chart.
-		You must specify the Helm chart URI using the -f flag.
 
 		Example usage:
 
-		helm kanvas-snapshot -n nginx-helm -f https://charts.bitnami.com/bitnami/nginx-13.2.33.tgz -email test@gmail.com
+		helm kanvas-snapshot -n nginx-helm -f https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz -e your-email@example.com
 
 		Flags:
-		-f string  URI to Helm chart (required)
-		-n string  Optional name for the Meshery design
-		-e string  Optional email to associate with the Meshery design`,
+		-f, --file string	URI to Helm chart (required)
+		-n, --name string	(optional name for the Meshery design
+		-e, --email string	(optional) email address to notify when snapshot is ready
+		-h			Help for Helm Kanvas Snapshot plugin`,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
-		Log = log.SetupMeshkitLogger("kanvas-snapshot", false, os.Stdout)
+		Log = log.SetupMeshkitLogger("helm-kanvas-snapshot", false, os.Stdout)
 		// Use the extracted name from URI if not provided
 		if designName == "" {
 			designName = ExtractNameFromURI(chartURI)
-			Log.Warnf("No name provided. Using extracted name: %s", designName)
+			Log.Warnf("No design name provided. Using extracted name: %s", designName)
 		}
 
 		// Create Meshery Snapshot
@@ -80,9 +80,9 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 
 		if email == "" {
 			loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
-			Log.Infof("\nSnapshot generated successfully. Snapshot URL: %s\n", assetLocation)
+			Log.Infof("\nSnapshot generated. Snapshot URL: %s\n", assetLocation)
 		} else {
-			Log.Info("An email will be sent to the provided email containing the snapshot in a few minutes.")
+			Log.Info("You will be notified via email when your snapshot is ready.")
 		}
 		return nil
 	},
@@ -153,7 +153,6 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 		os.Exit(1)
 	}
 	sourceType := "Helm Chart"
-	Log.Info("Here111")
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/pattern/%s", MesheryApiBaseUrl, sourceType), bytes.NewBuffer(payloadBytes))
 	if err != nil {
 		LogError.Error(err)
