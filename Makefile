@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include Makefile.core.mk
+include build/Makefile.core.mk
 
 
 .PHONY: all
@@ -49,7 +49,7 @@ ifeq (,$(findstring $(GOVERSION), $(INSTALLED_GO_VERSION)))
 endif
 
 
-OUTDIR := ../cmd/kanvas-snapshot/bin
+OUTDIR := ./cmd/kanvas-snapshot/bin
 ARCH := amd64
 
 BINNAME_DARWIN ?= kanvas-snapshot-darwin-$(ARCH)
@@ -69,8 +69,6 @@ LDFLAGS := "\
     -X 'main.MesheryApiBaseUrl=$(MESHERY_API_BASE_URL)' \
     -X 'main.SystemID=$(SYSTEM_ID)'"
 
-
-
 .PHONY: build
 build:
 	@echo "Building for all platforms..."
@@ -82,19 +80,19 @@ build:
 .PHONY: $(BINNAME_DARWIN)
 $(BINNAME_DARWIN):
 	@echo "Building for Darwin..."
-	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=darwin go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_DARWIN) ../cmd/kanvas-snapshot
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=darwin go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_DARWIN) ./cmd/kanvas-snapshot
 
 # Build Helm plugin for Linux
 .PHONY: $(BINNAME_LINUX)
 $(BINNAME_LINUX):
 	@echo "Building for Linux..."
-	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=linux go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_LINUX) ../cmd/kanvas-snapshot
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=linux go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_LINUX) ./cmd/kanvas-snapshot
 
 # Build Helm plugin for Windows
 .PHONY: $(BINNAME_WINDOWS)
 $(BINNAME_WINDOWS):
 	@echo "Building for Windows..."
-	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=windows go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_WINDOWS) ../cmd/kanvas-snapshot
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=windows go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_WINDOWS) ./cmd/kanvas-snapshot
 
 # Clean up binaries
 .PHONY: clean
