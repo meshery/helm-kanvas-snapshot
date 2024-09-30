@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
 project_name: kanvas-snapshot
 
 before:
@@ -67,4 +69,4 @@ changelog:
       - '^test:'
 
 release:
-  name_template: "Kanvas Snapshot {{.Tag}}"
+  name_template: "Helm Kanvas Snapshot {{.Tag}}"
