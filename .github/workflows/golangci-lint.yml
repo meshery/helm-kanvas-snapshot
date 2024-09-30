@@ -33,7 +33,7 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.59
-          working-directory: mesheryctl
+          working-directory: cmd/kanvas-snapshot
           args: --timeout 10m --verbose
           skip-cache: true
   build:
