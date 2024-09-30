@@ -1,17 +1,34 @@
 # Meshery Extension: Kanvas Snapshot Helm Plugin
+[Meshery Extensions](https://meshery.io/extension) are plugins or add-ons that enhance the functionality of the Meshery platform beyond its core capabilities.
 
-The **Kanvas Snapshot Helm Plugin** allows users to generate a visual snapshot of their Helm charts directly from the command line. It simplifies the process of creating Meshery Snapshots, providing a visual representation of packaged Helm charts. This plugin integrates with Meshery Cloud and GitHub Actions to automate the workflow of snapshot creation, which is especially useful for Helm users who need to quickly visualize their chart configurations.
+Types of Extensions:
+
+Types of Extensions: Meshery supports different types of extensions, including:
+ - [Adapters](https://docs.meshery.io/concepts/architecture/adapters): for interacting with various service meshes and cloud-native projects   
+ - [Load Generators]: for performance testing and benchmarking   
+ - [Providers]: for connecting to different cloud providers and infrastructure platforms
+ - CLI Plugins:
+ - UI Plugins:
+
+They allow users to customize, extend, and integrate Meshery with other tools and services. Some key points about Meshery Extensions:
 
 **Table of Contents**
 
-- [Extension Overview](#extension-overview)
+- [Meshery Extension: Kanvas Snapshot Helm Plugin](#meshery-extension-kanvas-snapshot-helm-plugin)
+  - [Extension Overview](#extension-overview)
     - [Features](#features)
-- [Installation](#installation-and-use)
-    - [Prerequites](#prerequisites)
+  - [Installation and Use](#installation-and-use)
+    - [Prerequisites](#prerequisites)
     - [Usage](#usage)
-- [Contributing](#contributing)
+  - [Contributing](#contributing)
+  - [Join the Meshery community!](#join-the-meshery-community)
+  - [Contributing](#contributing-1)
+    - [Show Your Support](#show-your-support)
+    - [License](#license)
 
 ## Extension Overview
+
+The **Kanvas Snapshot Helm Plugin** allows users to generate a visual snapshot of their Helm charts directly from the command line. It simplifies the process of creating Meshery Snapshots, providing a visual representation of packaged Helm charts. This plugin integrates with Meshery Cloud and GitHub Actions to automate the workflow of snapshot creation, which is especially useful for Helm users who need to quickly visualize their chart configurations.
 
 Helm charts can be complex, especially when custom configurations are applied via `values.yaml` files. This Meshery extension bridges the gap between Helm chart configurations and their visual representation by converting Helm charts into **Kanvas Snapshots**. These snapshots can be received either via email or as a URL displayed directly in the terminal.
 
@@ -59,9 +76,9 @@ Once the plugin is installed, you can generate a snapshot using either a package
 helm snapshot -f <chart-URI> [-n <snapshot-name>] [-e <email>]
 ```
 
-- **`-f`**: Path or URL to the Helm chart (required).
-- **`-n`**: (Optional) name for the snapshot. If not provided, it will be auto-generated based on the chart name.
-- **`-e`**: (Optional) email address at which to receive the snapshot. If not provided, a link to the snapshot will be displayed in the terminal.
+- **`-f`**, **`--file`**: (required) path or URL to the Helm chart (required).
+- **`-n`**, **`--name`**: (optional) name for the snapshot. If not provided, a name will be auto-generated based on the chart name.
+- **`-e`, **`--email`**: (optional) email address to notify when snapshot is ready. If not provided, a link to the snapshot will be displayed in the terminal.
 
 **Example**
 
