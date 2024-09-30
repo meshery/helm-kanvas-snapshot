@@ -38,7 +38,7 @@ jobs:
       #     signoff: true
       #     branch: docs/automated-release-notes
       #     base: master
-      #     title: '[Docs] Release Notes for Meshery ${{ steps.release_drafter.outputs.tag_name }}'
+      #     title: '[Docs] Release Notes for Meshery Extension  Helm Kanvas Snapshot ${{ steps.release_drafter.outputs.tag_name }}'
       #     body: |
       #       An auto-generated pull request to document release notes for Meshery ${{ steps.release_drafter.outputs.tag_name }}
       #     labels: |
