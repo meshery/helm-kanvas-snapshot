@@ -17,6 +17,11 @@ jobs:
     if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout Meshery repo
+        uses: actions/checkout@master
+        with:
+          path: meshery
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
       - uses: actions/checkout@master
         if: ${{ github.event_name == 'pull_request' }}
         with:
@@ -38,18 +43,9 @@ jobs:
           go get github.com/layer5io/meshkit/cmd/errorutil@master
           go build -o ~/errorutil github.com/layer5io/meshkit/cmd/errorutil
 
-      - name: Run Utility For Meshery Server
+      - name: Run Utility For Plugin
         run: |
-          ~/errorutil update -d . -i ./server/helpers -o ./server/helpers --skip-dirs mesheryctl
-          output=$(~/errorutil -d . analyze -i ./server/helpers -o ./server/helpers --skip-dirs mesheryctl | wc -c)
-          if [ "$output" -ne 0 ]; then
-            exit 1
-          fi
-          echo '{ "errors_export": "" }' | jq --slurpfile export ./server/helpers/errorutil_errors_export.json '.errors_export = $export[0]' > ./docs/_data/errorref/meshery-server_errors_export.json
-
-      - name: Run Utility For Mesheryctl
-        run: |
-          cd ./mesheryctl
+          cd ./cmd
           ~/errorutil update -d . -i ./helpers -o ./helpers
           output=$(~/errorutil -d . analyze -i ./helpers -o ./helpers | wc -c)
           if [ "$output" -ne 0 ]; then
@@ -69,4 +65,4 @@ jobs:
           commit_user_email: ci@layer5.io
           commit_author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           commit_options: "--signoff"
-          commit_message: "[Error Codes]: Update Meshery server and mehseryctl error codes and reference"
+          commit_message: "[Error Codes]: Update Helm Kanvas Snapshot error codes and reference"
