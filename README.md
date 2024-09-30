@@ -6,12 +6,10 @@
 - [Load Generators](https://docs.meshery.io/extensibility/load-generators): for performance characterization and benchmarking
 - [Integrations](https://docs.meshery.io/extensibility/integrations): model-based support for a broad variety of design and orchestration of cloud and cloud native platforms, tools, and technologies.
 - [Providers](https://docs.meshery.io/extensibility/providers): for connecting to different cloud providers and infrastructure platforms
-<!-- TODO: NEW PAGE NEEDED HERE:
+- [UI Plugins](https://docs.meshery.io/extensibility/ui): Meshery UI has a number of extension points that allow users to customize their experience with third-party plugins.
+<!-- TODO: NEW PAGE NEEDED HERE: - CLI Plugins:  -->
 
-- CLI Plugins:  -->
-- [UI Plugins](https://docs.meshery.io/extensibility/ui):
 
-They allow users to customize, extend, and integrate Meshery with other tools and services. Some key points about Meshery Extensions:
 
 **Table of Contents**
 
