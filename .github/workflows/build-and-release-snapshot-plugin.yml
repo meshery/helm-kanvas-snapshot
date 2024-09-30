@@ -1,0 +1,39 @@
+name: Kanvas Snapshot Build & Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    if: github.repository == 'helm-kanvas-snapshot' && startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'patch') && !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc')
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+
+      - name: Run GoReleaser with tag
+        uses: goreleaser/goreleaser-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_CHANNEL: "stable"
+          MESHERY_CLOUD_API_COOKIE: ${{ secrets.MESHERY_CLOUD_API_COOKIE }}
+          MESHERY_API_COOKIE: ${{ secrets.MESHERY_API_COOKIE }}
+          OWNER: ${{ secrets.OWNER }}
+          REPO: ${{ secrets.REPO }}
+          WORKFLOW: ${{ secrets.WORKFLOW }}
+          BRANCH: ${{ secrets.BRANCH }}
+          MESHERY_CLOUD_API_BASE_URL: ${{ secrets.MESHERY_CLOUD_API_BASE_URL }}
+          MESHERY_API_BASE_URL: ${{ secrets.MESHERY_API_BASE_URL }}
+          SYSTEM_ID: ${{ secrets.SYSTEM_ID }}
+        with:
+          version: '~> v2'
+          args: release --clean --skip-validate
