@@ -1,4 +1,4 @@
-name: Meshery Build and Releaser (edge)
+name: Meshery Extension Build and Releaser (edge)
 on:
   workflow_dispatch:
     inputs:
@@ -17,7 +17,7 @@ on:
 jobs:
   update-rest-api-docs:
     name: Update REST API Documentation
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +57,7 @@ jobs:
 
   update-graphql-docs:
     name: Update GraphQL API Documentation
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
@@ -99,7 +99,7 @@ jobs:
 
   docker-build-push:
     name: Docker build and push
-    if: github.repository == 'meshery/meshery' && github.event_name != 'pull_request' && success()
+    if: github.repository == 'meshery/helm-kanvas-snapshot' && github.event_name != 'pull_request' && success()
     env:
       RELEASE_CHANNEL: "edge"
     runs-on: ubuntu-22.04

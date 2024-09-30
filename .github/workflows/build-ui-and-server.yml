@@ -21,7 +21,7 @@ permissions: read-all
 jobs:
   build-backend:
     name: Backend build
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
@@ -41,7 +41,7 @@ jobs:
           make build-server
   ui-build:
     name: UI build
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
@@ -104,7 +104,7 @@ jobs:
     needs: [build-backend, ui-build]
     name: UI end-to-end tests
     environment: staging-playground
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     timeout-minutes: 45
     steps:
@@ -208,7 +208,7 @@ jobs:
             retention-days: 14
   docker-build-test:
     name: Docker build
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code
@@ -237,7 +237,7 @@ jobs:
             repository: ${{ secrets.IMAGE_NAME }}
   # validate the swagger docs
   swaggerci:
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     name: swagger-docs
     runs-on: ubuntu-22.04
     steps:
@@ -264,7 +264,7 @@ jobs:
   # validate graphQL schema
   garphql_validate:
     name: Validate GraphQL schema
-    if: github.repository == 'meshery/meshery'
+    if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
