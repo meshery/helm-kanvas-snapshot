@@ -23,11 +23,11 @@ all: dep-check build
 
 ## Analyze error codes
 error: dep-check
-	go run github.com/layer5io/meshkit/cmd/errorutil -d ../internal/errors analyze -i . -o .
+	go run github.com/layer5io/meshkit/cmd/errorutil -d . analyze -i ./build -o ./build
 
 ## Runs meshkit error utility to update error codes.
 error-util:
-	go run github.com/layer5io/meshkit/cmd/errorutil -d ../internal/errors update -i . -o .
+	go run github.com/layer5io/meshkit/cmd/errorutil -d . update -i ./build -o ./build
 
 
 
