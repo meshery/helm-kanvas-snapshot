@@ -80,19 +80,19 @@ build:
 .PHONY: $(BINNAME_DARWIN)
 $(BINNAME_DARWIN):
 	@echo "Building for Darwin..."
-	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=darwin go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_DARWIN) ./cmd/kanvas-snapshot
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=darwin go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_DARWIN) ./cmd/kanvas-snapshot/main.go
 
 # Build Helm plugin for Linux
 .PHONY: $(BINNAME_LINUX)
 $(BINNAME_LINUX):
 	@echo "Building for Linux..."
-	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=linux go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_LINUX) ./cmd/kanvas-snapshot
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=linux go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_LINUX) ./cmd/kanvas-snapshot/main.go
 
 # Build Helm plugin for Windows
 .PHONY: $(BINNAME_WINDOWS)
 $(BINNAME_WINDOWS):
 	@echo "Building for Windows..."
-	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=windows go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_WINDOWS) ./cmd/kanvas-snapshot
+	CGO_ENABLED=0 GOARCH=$(ARCH) GOOS=windows go build -ldflags=$(LDFLAGS) -o $(OUTDIR)/$(BINNAME_WINDOWS) ./cmd/kanvas-snapshot/main.go
 
 # Clean up binaries
 .PHONY: clean
