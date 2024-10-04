@@ -17,11 +17,6 @@ jobs:
     if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout Meshery repo
-        uses: actions/checkout@master
-        with:
-          path: meshery
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
       - uses: actions/checkout@master
         if: ${{ github.event_name == 'pull_request' }}
         with:
@@ -32,7 +27,6 @@ jobs:
         with:
           ref: "master"
           fetch-depth: 1
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
       - name: Setup Go
         uses: actions/setup-go@master
         with:
