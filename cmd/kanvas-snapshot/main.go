@@ -45,7 +45,7 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 		Flags:
 		-f, --file string	URI to Helm chart (required)
 		-n, --name string	(optional name for the Meshery design
-		-e, --email string	(optional) email address to notify when snapshot is ready
+		-e, --email string	email address to notify when snapshot is ready (required)
 		-h			Help for Helm Kanvas Snapshot plugin`,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
