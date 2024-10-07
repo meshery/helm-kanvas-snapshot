@@ -7,13 +7,12 @@ import (
 )
 
 var (
-	ErrInvalidChartURICode          = "kanvas-snapshot-1000"
-	ErrCreatingMesheryDesignCode    = "kanvas-snapshot-1001"
-	ErrGeneratingSnapshotCode       = "kanvas-snapshot-1002"
-	ErrHTTPPostRequestCode          = "kanvas-snapshot-1003"
-	ErrDecodingAPICode              = "kanvas-snapshot-1004"
-	ErrRequiredFieldNotProvidedCode = "kanvas-snapshot-1005"
-	ErrUnexpectedResponseCodeCode   = "kanvas-snapshot-1006"
+	ErrInvalidChartURICode        = "kanvas-snapshot-900"
+	ErrCreatingMesheryDesignCode  = "kanvas-snapshot-901"
+	ErrGeneratingSnapshotCode     = "kanvas-snapshot-902"
+	ErrHTTPPostRequestCode        = "kanvas-snapshot-903"
+	ErrDecodingAPICode            = "kanvas-snapshot-905"
+	ErrUnexpectedResponseCodeCode = "kanvas-snapshot-906"
 )
 
 func ErrInvalidChartURI(err error) error {
