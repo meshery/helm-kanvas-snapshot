@@ -1,6 +1,8 @@
 package errors
 
 import (
+	"fmt"
+
 	"github.com/layer5io/meshkit/errors"
 )
 
@@ -11,6 +13,7 @@ var (
 	ErrHTTPPostRequestCode          = "kanvas-snapshot-1003"
 	ErrDecodingAPICode              = "kanvas-snapshot-1004"
 	ErrRequiredFieldNotProvidedCode = "kanvas-snapshot-1005"
+	ErrUnexpectedResponseCodeCode   = "kanvas-snapshot-1006"
 )
 
 func ErrInvalidChartURI(err error) error {
@@ -55,5 +58,14 @@ func ErrDecodingAPI(err error) error {
 		[]string{err.Error()},
 		[]string{"API response could not be decoded into the expected format."},
 		[]string{"Ensure the Meshery API response format is correct."},
+	)
+}
+
+func ErrUnexpectedResponseCode(statusCode int, body string) error {
+	return errors.New(ErrUnexpectedResponseCodeCode, errors.Alert,
+		[]string{"Received unexpected response code from Meshery API."},
+		[]string{fmt.Sprintf("Status Code: %d, Body: %s", statusCode, body)},
+		[]string{"The API returned an unexpected status code."},
+		[]string{"Check the request details and ensure the Meshery API is functioning correctly."},
 	)
 }
