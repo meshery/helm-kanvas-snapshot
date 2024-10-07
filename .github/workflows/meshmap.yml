@@ -43,4 +43,4 @@ jobs:
           mesheryToken: ${{ secrets.MESHERY_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
           prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
           application_type: "Helm chart" # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
-          application_url: "https://github.com/meshery/meshery.io/raw/refs/heads/master/charts/meshery-v0.7.110.tgz" 
+          application_url: "https://github.com/meshery/meshery.io/raw/refs/heads/master/charts/meshery-v0.7.110.tgz"
