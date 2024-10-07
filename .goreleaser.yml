@@ -12,11 +12,9 @@ builds:
 
     ldflags:
       - -s -w
-      - -X main.MesheryCloudApiCookie={{.Env.MESHERY_CLOUD_API_COOKIE}}
-      - -X main.MesheryApiCookie={{.Env.MESHERY_API_COOKIE}}
-      - -X main.MesheryCloudApiBaseUrl={{.Env.MESHERY_CLOUD_API_BASE_URL}}
-      - -X main.MesheryApiBaseUrl={{.Env.MESHERY_API_BASE_URL}}
-      - -X main.SystemID={{.Env.SYSTEM_ID}}
+      - -X main.providerToken=${{ .Env.PROVIDER_TOKEN }}  
+      - -X main.MesheryCloudApiBaseUrl="https://meshery.layer5.io"
+      - -X main.MesheryApiBaseUrl="https://playground.meshery.io"
 
     goos:
       - darwin

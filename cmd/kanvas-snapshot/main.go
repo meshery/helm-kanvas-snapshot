@@ -19,12 +19,9 @@ import (
 )
 
 var (
-	MesheryToken           string
-	MesheryCloudApiCookie  string
-	MesheryApiCookie       string
+	ProviderToken          string
 	MesheryApiBaseUrl      string
 	MesheryCloudApiBaseUrl string
-	SystemID               string
 	Log                    logger.Handler
 )
 
@@ -165,7 +162,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 	}
 
 	// Set headers and log them
-	req.Header.Set("Cookie", MesheryApiCookie)
+	req.Header.Set("Cookie", ProviderToken)
 	req.Header.Set("Origin", MesheryApiBaseUrl)
 	req.Header.Set("Host", MesheryApiBaseUrl)
 	req.Header.Set("Content-Type", "text/plain;charset=UTF-8")
@@ -231,9 +228,8 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 		return err
 	}
 
-	req.Header.Set("Cookie", MesheryCloudApiCookie)
+	req.Header.Set("Cookie", ProviderToken)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("SystemID", SystemID)
 	req.Header.Set("Referer", fmt.Sprintf("%s/dashboard", MesheryCloudApiBaseUrl))
 
 	client := &http.Client{}

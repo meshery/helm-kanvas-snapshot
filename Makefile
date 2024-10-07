@@ -58,11 +58,9 @@ BINNAME_WINDOWS ?= kanvas-snapshot-windows-$(ARCH).exe
 
 
 LDFLAGS := "\
-    -X 'main.MesheryCloudApiCookie=$(MESHERY_CLOUD_API_COOKIES)' \
-    -X 'main.MesheryApiCookie=$(MESHERY_API_COOKIES)' \
+    -X 'main.providerToken=$(PROVIDER_TOKEN)' \
     -X 'main.MesheryCloudApiBaseUrl=$(MESHERY_CLOUD_API_BASE_URL)' \
-    -X 'main.MesheryApiBaseUrl=$(MESHERY_API_BASE_URL)' \
-    -X 'main.SystemID=$(SYSTEM_ID)'"
+    -X 'main.MesheryApiBaseUrl=$(MESHERY_API_BASE_URL)'"
 
 .PHONY: build
 build:
