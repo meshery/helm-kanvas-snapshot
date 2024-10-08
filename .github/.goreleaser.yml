@@ -12,7 +12,7 @@ builds:
 
     ldflags:
       - -s -w
-      - -X main.providerToken={{ .Env.PROVIDER_TOKEN }}  
+      - -X main.providerToken={{.Env.PROVIDER_TOKEN}}  
       - -X main.MesheryCloudApiBaseUrl="https://meshery.layer5.io"
       - -X main.MesheryApiBaseUrl="https://playground.meshery.io"
 
