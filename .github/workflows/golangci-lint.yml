@@ -64,4 +64,4 @@ jobs:
           RELEASE_CHANNEL: "edge"
         with:
           version: latest
-          args: release --snapshot --skip-publish --clean
+          args: release --snapshot --skip-publish --clean -f .github/.goreleaser.yml

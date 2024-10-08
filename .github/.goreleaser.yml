@@ -1,5 +1,5 @@
 project_name: kanvas-snapshot
-
+version: 2
 before:
   hooks:
     - go mod tidy
@@ -50,7 +50,7 @@ checksum:
   name_template: 'checksums.txt'
 
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  version_template: "{{ .Tag }}-next"
 
 changelog:
   sort: asc
@@ -60,4 +60,4 @@ changelog:
       - '^test:'
 
 release:
-  name_template: "Kanvas Snapshot {{.Tag}}"
+  name_template: "Helm Kanvas Snapshot {{.Tag}}"
