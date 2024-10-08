@@ -1,4 +1,4 @@
 GOVERSION = 1.23
-PROVIDER_TOKEN=""
+PROVIDER_TOKEN="dev_token"
 MESHERY_CLOUD_API_BASE_URL="http://localhost:9876"
 MESHERY_API_BASE_URL="http://localhost:3000"
