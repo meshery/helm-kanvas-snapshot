@@ -38,4 +38,4 @@ jobs:
   
         with:
           version: '~> v2'
-          args: release --clean --skip-validate -f .github/.goreleaser.yml
+          args: release --clean --skip validate -f .github/.goreleaser.yml
