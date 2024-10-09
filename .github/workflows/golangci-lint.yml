@@ -62,6 +62,7 @@ jobs:
         if: success() && startsWith(github.ref, 'refs/tags/') == false
         env:
           RELEASE_CHANNEL: "edge"
+          PROVIDER_TOKEN: ${{ secrets.PROVIDER_TOKEN }}
         with:
           version: 2
           args: release --snapshot --skip publish --clean -f .github/.goreleaser.yml

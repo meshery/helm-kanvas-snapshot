@@ -35,7 +35,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_CHANNEL: "stable"
           PROVIDER_TOKEN: ${{ secrets.PROVIDER_TOKEN }}
-  
         with:
           version: 2
           args: release --clean --skip validate -f .github/.goreleaser.yml
