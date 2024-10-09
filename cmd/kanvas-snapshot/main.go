@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,19 +19,10 @@ import (
 )
 
 var (
-	GithubToken            string
-	MesheryToken           string
-	MesheryCloudApiCookie  string
-	MesheryApiCookie       string
-	Owner                  string
-	Repo                   string
-	Workflow               string
-	Branch                 string
+	ProviderToken          string
 	MesheryApiBaseUrl      string
 	MesheryCloudApiBaseUrl string
-	SystemID               string
 	Log                    logger.Handler
-	LogError               logger.Handler
 )
 
 var (
@@ -133,10 +125,15 @@ func ExtractNameFromURI(uri string) string {
 }
 
 func handleError(err error) {
-	if err != nil {
-		LogError.Error(err)
-		os.Exit(1)
+	if err == nil {
+		return
 	}
+	if Log != nil {
+		Log.Error(err)
+	} else {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+	}
+	os.Exit(1)
 }
 
 func CreateMesheryDesign(uri, name, email string) (string, error) {
@@ -149,58 +146,64 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 
 	payloadBytes, err := json.Marshal(payload)
 	if err != nil {
-		LogError.Error(err)
-		os.Exit(1)
-	}
-	sourceType := "Helm Chart"
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/pattern/%s", MesheryApiBaseUrl, sourceType), bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		LogError.Error(err)
-		os.Exit(1)
+		Log.Info("Failed to marshal payload:", err)
+		return "", errors.ErrDecodingAPI(err)
 	}
 
-	req.Header.Set("Cookie", MesheryApiCookie)
+	sourceType := "Helm Chart"
+	encodedChartType := url.PathEscape(sourceType)
+	fullURL := fmt.Sprintf("%s/api/pattern/%s", MesheryApiBaseUrl, encodedChartType)
+
+	// Create the request
+	req, err := http.NewRequest("POST", fullURL, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		Log.Info("Failed to create new request:", err)
+		return "", errors.ErrHTTPPostRequest(err)
+	}
+
+	// Set headers and log them
+	req.Header.Set("Cookie", ProviderToken)
 	req.Header.Set("Origin", MesheryApiBaseUrl)
 	req.Header.Set("Host", MesheryApiBaseUrl)
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "text/plain;charset=UTF-8")
 	req.Header.Set("Accept-Encoding", "gzip, deflate, br, zstd")
 	req.Header.Set("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8")
 
 	client := &http.Client{}
+
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", errors.ErrHTTPPostRequest(err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		io.ReadAll(resp.Body)
-		return "", err
+		body, _ := io.ReadAll(resp.Body)
+		return "", errors.ErrUnexpectedResponseCode(resp.StatusCode, string(body))
 	}
-	// Expecting a JSON array in the response
+
+	// Decode response
 	var result []map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
-		return "", err
+		body, _ := io.ReadAll(resp.Body)
+		return "", errors.ErrDecodingAPI(fmt.Errorf("failed to decode json. body: %s, error: %w", body, err))
 	}
 
+	// Extracting the design ID from the result
 	if len(result) > 0 {
 		if id, ok := result[0]["id"].(string); ok {
+			Log.Infof("Successfully created Meshery design. ID: %s", id)
 			return id, nil
 		}
 	}
 
-	return "", errors.ErrHTTPPostRequest(err)
+	return "", errors.ErrCreatingMesheryDesign(fmt.Errorf("failed to extract design ID from response"))
 }
 
 func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 
 	payload := map[string]interface{}{
-		"Owner":        Owner,
-		"Repo":         Repo,
-		"Workflow":     Workflow,
-		"Branch":       Branch,
-		"github_token": GithubToken,
 		"Payload": map[string]string{
 			"application_type": "Helm Chart",
 			"designID":         designID,
@@ -225,20 +228,29 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 		return err
 	}
 
-	req.Header.Set("Cookie", MesheryCloudApiCookie)
+	req.Header.Set("Cookie", ProviderToken)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("SystemID", SystemID)
 	req.Header.Set("Referer", fmt.Sprintf("%s/dashboard", MesheryCloudApiBaseUrl))
 
 	client := &http.Client{}
+
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return errors.ErrHTTPPostRequest(err)
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != 200 {
-		_, err := io.ReadAll(resp.Body)
-		return err
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return errors.ErrUnexpectedResponseCode(resp.StatusCode, string(body))
+	}
+
+	// Decode response
+	var result []map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	if err != nil {
+		body, _ := io.ReadAll(resp.Body)
+		return errors.ErrDecodingAPI(fmt.Errorf("failed to decode json. body: %s, error: %w", body, err))
 	}
 
 	return nil
@@ -247,14 +259,14 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 func main() {
 
 	generateKanvasSnapshotCmd.Flags().StringVarP(&chartURI, "file", "f", "", "URI to Helm chart (required)")
-	generateKanvasSnapshotCmd.Flags().StringVarP(&designName, "design-name", "l", "", "Optional name for the Meshery design")
+	generateKanvasSnapshotCmd.Flags().StringVarP(&designName, "design-name", "n", "", "Optional name for the Meshery design")
 	generateKanvasSnapshotCmd.Flags().StringVarP(&email, "email", "e", "", "Optional email to associate with the Meshery design")
 
-	generateKanvasSnapshotCmd.MarkFlagRequired("file")
-	generateKanvasSnapshotCmd.MarkFlagRequired("email")
+	_ = generateKanvasSnapshotCmd.MarkFlagRequired("file")
+	_ = generateKanvasSnapshotCmd.MarkFlagRequired("email")
 
 	if err := generateKanvasSnapshotCmd.Execute(); err != nil {
-		LogError.Error(err)
+		Log.Error(err)
 		os.Exit(1)
 	}
 
