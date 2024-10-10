@@ -5,6 +5,11 @@ on:
     types: [published]
 
   workflow_dispatch:
+    inputs:
+      branch:
+         description: "Branch to deploy in the staging environment. If not provided, master branch of the repository will be used."
+         default: "master"
+         type: string
 jobs:
   release:
     if: github.repository == 'meshery/helm-kanvas-snapshot' && startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'patch') && !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc')
@@ -14,7 +19,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          ref: ${{ inputs.branch }}
 
       - name: Set up Go
         uses: actions/setup-go@v5
