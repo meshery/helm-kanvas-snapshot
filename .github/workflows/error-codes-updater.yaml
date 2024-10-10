@@ -39,7 +39,6 @@ jobs:
 
       - name: Run Utility For Plugin
         run: |
-          cd ./cmd
           ~/errorutil update -d . -i ./helpers -o ./helpers
           output=$(~/errorutil -d . analyze -i ./helpers -o ./helpers | wc -c)
           if [ "$output" -ne 0 ]; then
