@@ -49,7 +49,11 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 		-h			Help for Helm Kanvas Snapshot plugin`,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
+<<<<<<< HEAD
 		Log = log.SetupMeshkitLogger("helm-kanvas-snapshot", false, os.Stdout)
+=======
+
+>>>>>>> d6f467c2 (pull latest changes)
 		// Use the extracted name from URI if not provided
 		if designName == "" {
 			designName = ExtractNameFromURI(chartURI)
@@ -270,4 +274,10 @@ func main() {
 		os.Exit(1)
 	}
 
+}
+
+func init() {
+	cobra.OnInitialize(func() {
+		Log = log.SetupMeshkitLogger("helm-kanvas-snapshot", false, os.Stdout)
+	})
 }
