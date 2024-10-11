@@ -71,6 +71,15 @@ func ErrUnexpectedResponseCode(statusCode int, body string) error {
 	)
 }
 
+func ErrRequiredFieldNotProvided(err error, field string) error {
+	return errors.New(ErrRequiredFieldNotProvidedCode, errors.Alert,
+		[]string{"All required flags are not passed."},
+		[]string{err.Error()},
+		[]string{"Required flag \"%s\" is not passed."},
+		[]string{"Ensure value for flag \"%s\" is correctly provided."},
+	)
+}
+
 func ErrInvalidEmailFormat(email string) error {
 	return errors.New(ErrInvalidEmailFormatCode, errors.Alert,
 		[]string{"Invalid email format provided."},

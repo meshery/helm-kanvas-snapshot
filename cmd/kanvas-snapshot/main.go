@@ -57,7 +57,9 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 			designName = ExtractNameFromURI(chartURI)
 			Log.Warnf("No design name provided. Using extracted name: %s", designName)
 		}
-
+		if email != "" && !isValidEmail(email) {
+			handleError(errors.ErrInvalidEmailFormat(email))
+		}
 		// Create Meshery Snapshot
 		designID, err := CreateMesheryDesign(chartURI, designName, email)
 		if err != nil {
