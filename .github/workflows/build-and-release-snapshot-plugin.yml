@@ -1,5 +1,8 @@
 name: Kanvas Snapshot Build & Release
-
+permissions:
+  contents: write
+  actions: read
+  
 on:
   release:
     types: [published]
