@@ -10,7 +10,11 @@ on:
   workflow_dispatch:
 jobs:
   release:
-    if: github.repository == 'meshery/helm-kanvas-snapshot' && startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'patch') && !contains(github.ref, 'alpha') && !contains(github.ref, 'beta') && !contains(github.ref, 'rc')
+    if: |
+      (github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v') && 
+       !contains(github.ref, 'patch') && !contains(github.ref, 'alpha') && 
+       !contains(github.ref, 'beta') && !contains(github.ref, 'rc')) ||
+      (github.event_name == 'pull_request')
     runs-on: macos-latest
 
     steps:
