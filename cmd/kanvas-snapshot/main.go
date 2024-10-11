@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -30,6 +31,8 @@ var (
 	email      string
 	designName string
 )
+
+var emailRegex = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$`)
 
 var generateKanvasSnapshotCmd = &cobra.Command{
 	Use:   "kanvas",
@@ -253,6 +256,10 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 	}
 
 	return nil
+}
+
+func isValidEmail(email string) bool {
+	return emailRegex.MatchString(email)
 }
 
 func main() {
