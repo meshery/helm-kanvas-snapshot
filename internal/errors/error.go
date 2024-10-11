@@ -7,12 +7,13 @@ import (
 )
 
 var (
-	ErrInvalidChartURICode        = "kanvas-snapshot-900"
-	ErrCreatingMesheryDesignCode  = "kanvas-snapshot-901"
-	ErrGeneratingSnapshotCode     = "kanvas-snapshot-902"
-	ErrHTTPPostRequestCode        = "kanvas-snapshot-903"
-	ErrDecodingAPICode            = "kanvas-snapshot-905"
-	ErrUnexpectedResponseCodeCode = "kanvas-snapshot-906"
+	ErrInvalidChartURICode          = "kanvas-snapshot-900"
+	ErrCreatingMesheryDesignCode    = "kanvas-snapshot-901"
+	ErrGeneratingSnapshotCode       = "kanvas-snapshot-902"
+	ErrHTTPPostRequestCode          = "kanvas-snapshot-903"
+	ErrDecodingAPICode              = "kanvas-snapshot-905"
+	ErrUnexpectedResponseCodeCode   = "kanvas-snapshot-906"
+	ErrRequiredFieldNotProvidedCode = "kanvas-snapshot-907"
 )
 
 func ErrInvalidChartURI(err error) error {
@@ -66,5 +67,14 @@ func ErrUnexpectedResponseCode(statusCode int, body string) error {
 		[]string{fmt.Sprintf("Status Code: %d, Body: %s", statusCode, body)},
 		[]string{"The API returned an unexpected status code."},
 		[]string{"Check the request details and ensure the Meshery API is functioning correctly."},
+	)
+}
+
+func ErrRequiredFieldNotProvided(err error, field string) error {
+	return errors.New(ErrRequiredFieldNotProvidedCode, errors.Alert,
+		[]string{"All required flags are not passed."},
+		[]string{err.Error()},
+		[]string{"Required flag \"%s\" is not passed."},
+		[]string{"Ensure value for flag \"%s\" is correctly provided."},
 	)
 }
