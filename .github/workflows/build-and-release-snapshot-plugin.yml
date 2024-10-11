@@ -10,8 +10,9 @@ on:
 
 # Permissions block to ensure the workflow has the right access
 permissions:
-  contents: write  # Required to create and update releases, upload assets
-  actions: read    # Allows the workflow to read action metadata
+      contents: write
+      pull-requests: write
+      repository-projects: write
 
 jobs:
   release:
