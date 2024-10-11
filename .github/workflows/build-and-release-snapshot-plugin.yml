@@ -13,6 +13,8 @@ permissions:
       contents: write
       pull-requests: write
       repository-projects: write
+      actions: read
+      checks: write
 
 jobs:
   release:
