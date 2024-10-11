@@ -3,6 +3,9 @@ name: Kanvas Snapshot Build & Release
 on:
   release:
     types: [published]
+  pull_request:
+    branches:
+      - master
 
   workflow_dispatch:
 jobs:
@@ -20,6 +23,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.21"
+
+      - name: Get Git short hash
+        run: echo "GIT_HASH=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
     
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
