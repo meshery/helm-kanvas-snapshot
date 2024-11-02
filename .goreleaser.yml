@@ -1,4 +1,4 @@
-project_name: kanvas-snapshot
+project_name: helm-kanvas-snapshot
 version: 2
 before:
   hooks:
@@ -34,7 +34,7 @@ archives:
       - install-binary.sh
 
 snapshot:
-  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_{{ .Runtime.Goarch }}"
+  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 checksum:
   name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
