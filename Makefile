@@ -141,7 +141,7 @@ local.run: local.build ## Builds the artifact and starts the service
 	./${APP_NAME}
 
 print_home:
-	@echo ${APP_NAME}
+	@echo ${ENVIRONMENT}
 
 
 local.deploy: local.build ## Deploys locally built Helm plugin

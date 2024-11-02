@@ -24,20 +24,34 @@ builds:
       - arm64
     binary: '{{ .ProjectName }}'
 
-extra_files:
-  - source: plugin.yaml                    # Adds plugin.yaml to dist
-    destination: .
-  - source: LICENSE                        # Adds LICENSE to dist
-    destination: .
-  - source: install-binary.sh              # Adds install-binary.sh to dist
-    destination: .
-
 archives:
   - format: tar.gz
-    wrap_in_directory: true                 # Ensures all files are in a top-level directory
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    name_template: >-
+      {{- .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
     files:
-      - plugin.yaml                         # Include plugin.yaml
-      - LICENSE                             # Optional, include any other files
-      - install-binary.sh                   # Optional install script
+      - plugin.yaml
+      - LICENSE
+      - install-binary.sh
 
+snapshot:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_{{ .Runtime.Goarch }}"
+
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
+  algorithm: sha256
+
+signs:
+  - artifacts: checksum
+    args:
+      - "--batch"
+      - "--local-user"
+      - "{{ .Env.GPG_FINGERPRINT }}" # set this environment variable for your signing key
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
