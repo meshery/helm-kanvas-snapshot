@@ -2,19 +2,14 @@ name: "kanvas-snapshot"
 version: "0.1.0"
 usage: "Generate a visual snapshot of your Helm chart as a Meshery Snapshot"
 description: "A Helm plugin to generate Meshery Snapshots from Helm charts using a custom Go binary"
-command: "$HELM_PLUGIN_DIR/bin/kanvas-snapshot-linux-amd64"
-platformCommand:
-  - os: linux
-    arch: amd64
-    command: "$HELM_PLUGIN_DIR/bin/kanvas-snapshot-linux-amd64"
-  - os: darwin
-    arch: amd64
-    command: "$HELM_PLUGIN_DIR/bin/kanvas-snapshot-darwin-amd64"
-  - os: windows
-    arch: amd64
-    command: "$HELM_PLUGIN_DIR/bin/kanvas-snapshot-windows-amd64.exe"
+useTunnel: true
+command: "$HELM_PLUGIN_DIR/bin/helm-kanvas-snapshot"
 hooks:
   install: |
     echo "Snapshot plugin installed."
+    $HELM_PLUGIN_DIR/install-binary.sh
+  update: |
+    echo "Snapshot plugin updated."
+    $HELM_PLUGIN_DIR/install-binary.sh
   uninstall: |
     echo "Snapshot plugin uninstalled."
