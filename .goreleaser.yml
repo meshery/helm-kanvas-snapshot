@@ -26,6 +26,7 @@ builds:
 
 archives:
   - format: tar.gz
+    wrap_in_directory: true
     name_template: >-
       {{- .ProjectName }}_
       {{- .Version }}_
