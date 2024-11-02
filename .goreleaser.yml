@@ -24,31 +24,20 @@ builds:
       - arm64
     binary: '{{ .ProjectName }}'
 
+extra_files:
+  - source: plugin.yaml                    # Adds plugin.yaml to dist
+    destination: .
+  - source: LICENSE                        # Adds LICENSE to dist
+    destination: .
+  - source: install-binary.sh              # Adds install-binary.sh to dist
+    destination: .
+
 archives:
   - format: tar.gz
-    name_template: >-
-      {{- .ProjectName }}_
-      {{- .Version }}_
-      {{- .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
+    wrap_in_directory: true                 # Ensures all files are in a top-level directory
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     files:
-      - plugin.yaml
-      - LICENSE
-      - completion.yaml
-      - install-binary.sh
+      - plugin.yaml                         # Include plugin.yaml
+      - LICENSE                             # Optional, include any other files
+      - install-binary.sh                   # Optional install script
 
-checksum:
-  name_template: 'checksums.txt'
-
-
-snapshot:
-  version_template: "{{ .Tag }}-next"
-
-changelog:
-  sort: asc
-  filters:
-    exclude:
-      - '^docs:'
-      - '^test:'
