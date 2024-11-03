@@ -35,18 +35,9 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
     files:
-      - source: plugin.yaml
-      - source: LICENSE
-      - source: install-binary.sh
-        file_mode: 0755              # Makes install-binary.sh executable
-      - source: >-
-          ./dist/{{- .ProjectName }}_
-          {{- .Version }}_
-          {{- .Os }}_
-          {{- if eq .Arch "amd64" }}x86_64
-          {{- else if eq .Arch "386" }}i386
-          {{- else }}{{ .Arch }}{{ end }}
-        file_mode: 0755              # Makes the main binary executable
+      - plugin.yaml
+      - LICENSE
+      - install-binary.sh
 
 snapshot:
   name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_{{ .Runtime.Goarch }}"
