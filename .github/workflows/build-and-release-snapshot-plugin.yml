@@ -1,8 +1,8 @@
 name: Kanvas Snapshot Build & Release
 
 on:
-  pull_request:
-    types: [opened]
+  release:
+    types: [published]
 
   workflow_dispatch:
 
