@@ -96,11 +96,8 @@ print_home:
 
 
 local.deploy: local.build ## Deploys locally built Helm plugin
-	@mkdir -p ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin
-	@rm -rf ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin/helm-kanvas-snapshot
-	@cp helm-kanvas-snapshot ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin/helm-kanvas-snapshot
-	@cp plugin.yaml ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/
-	@cp install-binary.sh ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/
+  @rm -rf ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin/helm-kanvas-snapshot
+	@cp helm-images ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin/helm-kanvas-snapshot
 
 
 publish: local.check ## Builds and publishes the app
