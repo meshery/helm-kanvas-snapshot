@@ -22,37 +22,33 @@ function normalize_architecture() {
 }
 
 function download_plugin() {
-  os_name=$(uname -s)
-  os_arch=$(uname -m)
-
-  os_arch=$(normalize_architecture $os_arch)
-
   OUTPUT_BASENAME=helm-kanvas-snapshot
-  version=$(grep version "$HELM_PLUGIN_DIR/plugin.yaml" | cut -d'"' -f2)
-  DOWNLOAD_URL="https://github.com/meshery/helm-kanvas-snapshot/releases/download/v$version/helm-kanvas-snapshot_${version}_${os_name}_${os_arch}.tar.gz"
-  OUTPUT_BASENAME_WITH_POSTFIX="$HELM_PLUGIN_DIR/$OUTPUT_BASENAME.tar.gz"
 
-  echo -e "Download URL set to ${DOWNLOAD_URL}\n"
-  echo -e "Artifact path: ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
-  echo -e "Downloading ${DOWNLOAD_URL} to ${HELM_PLUGIN_DIR}\n"
-
-  if [ -z "${DOWNLOAD_URL}" ]; then
-    echo -e "Unsupported OS / architecture: ${os_name}/${os_arch}\n"
-    exit 1
-  fi
-
-  if [[ -n $(command -v curl) ]]; then
-    if curl --fail -L "${DOWNLOAD_URL}" -o "${OUTPUT_BASENAME_WITH_POSTFIX}"; then
-      echo -e "Successfully downloaded the archive, proceeding to install\n"
-    else
-      echo -e "Failed while downloading helm-kanvas-snapshot archive\n"
-      exit 1
-    fi
+  if [[ -n "$LOCAL_FILE_PATH" ]]; then
+    OUTPUT_BASENAME_WITH_POSTFIX="$LOCAL_FILE_PATH"
+    echo -e "Using local archive at ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
   else
-    echo "curl is required to download the plugin"
-    exit -1
+    version=$(grep version "$HELM_PLUGIN_DIR/plugin.yaml" | cut -d'"' -f2)
+    DOWNLOAD_URL="https://github.com/meshery/helm-kanvas-snapshot/releases/download/v$version/helm-kanvas-snapshot_${version}_${os_name}_${os_arch}.tar.gz"
+    OUTPUT_BASENAME_WITH_POSTFIX="$HELM_PLUGIN_DIR/$OUTPUT_BASENAME.tar.gz"
+
+    echo -e "Download URL set to ${DOWNLOAD_URL}\n"
+    echo -e "Artifact path: ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
+
+    if [[ -n $(command -v curl) ]]; then
+      if curl --fail -L "${DOWNLOAD_URL}" -o "${OUTPUT_BASENAME_WITH_POSTFIX}"; then
+        echo -e "Successfully downloaded the archive, proceeding to install\n"
+      else
+        echo -e "Failed while downloading helm-kanvas-snapshot archive\n"
+        exit 1
+      fi
+    else
+      echo "curl is required to download the plugin"
+      exit -1
+    fi
   fi
 }
+
 
 function install_plugin() {
   local HELM_PLUGIN_ARTIFACT_PATH=${OUTPUT_BASENAME_WITH_POSTFIX}
