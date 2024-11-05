@@ -20,7 +20,7 @@ func (f *TerminalFormatter) Format(entry *log.Entry) ([]byte, error) {
 
 // Call this function to setup logrus
 func SetupLogrusFormatter() {
-	//log formatter for improved UX
+	// log formatter for improved UX
 	log.SetFormatter(new(TerminalFormatter))
 }
 

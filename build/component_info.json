@@ -1,5 +1,5 @@
 {
-  "name": "kanvas-snapshot",
+  "name": "helm-kanvas-snapshot",
   "type": "component",
-  "next_error_code": 1006
+  "next_error_code": 1000
 }
