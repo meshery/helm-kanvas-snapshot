@@ -38,7 +38,7 @@ jobs:
       - name: Run GoReleaser with tag
         uses: goreleaser/goreleaser-action@v6
         with:
-          version: latest  # Use latest GoReleaser action version
+          version: 2  # Use latest GoReleaser action version
           args: release --clean --skip-validate -f goreleaser.yml  # Corrected filename to root
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
