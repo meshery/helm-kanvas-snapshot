@@ -3,7 +3,7 @@ module github.com/meshery/helm-kanvas-snapshot
 go 1.21.8
 
 require (
-	github.com/layer5io/meshkit v0.7.78
+	github.com/layer5io/meshkit v0.7.84
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
@@ -30,5 +30,5 @@ require (
 	golang.org/x/text v0.16.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/gorm v1.25.11 // indirect
+	gorm.io/gorm v1.25.12 // indirect
 )
