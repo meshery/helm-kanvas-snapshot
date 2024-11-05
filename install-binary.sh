@@ -92,7 +92,7 @@ function install() {
   echo
   "${HELM_PLUGIN_DIR}/bin/helm-kanvas-snapshot" -h
   echo
-  echo "See https://github.com/meshery/helm-kanvas-snapshot/helm-kanvas-snapshot#readme for more information on getting started."
+  echo "See https://github.com/meshery/helm-kanvas-snapshot#readme for more information on getting started."
 }
 
 trap "handle_exit" EXIT
