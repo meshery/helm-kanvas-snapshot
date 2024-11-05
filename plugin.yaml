@@ -1,13 +1,12 @@
 name: "helm-kanvas-snapshot"
-version: "0.1.0"
-usage: "Generate a visual snapshot of your Helm chart as a Meshery Snapshot"
-description: "A Helm plugin to generate Meshery Snapshots from Helm charts using a custom Go binary"
+version: "0.2.0"
+usage: "Generate a visual snapshot of your Helm chart as a Meshery Design"
+description: "A Helm plugin to generate Meshery designs from Helm charts and snapshot their visual representation."
 useTunnel: true
 command: "$HELM_PLUGIN_DIR/bin/helm-kanvas-snapshot"
 hooks:
   install: |
     echo "Snapshot plugin installed."
-
   update: |
     echo "Snapshot plugin updated."
     $HELM_PLUGIN_DIR/install-binary.sh
