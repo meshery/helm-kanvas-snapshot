@@ -75,8 +75,8 @@ func ErrRequiredFieldNotProvided(err error, field string) error {
 	return errors.New(ErrRequiredFieldNotProvidedCode, errors.Alert,
 		[]string{"All required flags are not passed."},
 		[]string{err.Error()},
-		[]string{"Required flag \"%s\" is not passed."},
-		[]string{"Ensure value for flag \"%s\" is correctly provided."},
+		[]string{fmt.Sprintf("Required flag \"%s\" is not passed.", field)},
+		[]string{fmt.Sprintf("Ensure value for flag \"%s\" is correctly provided.", field)},
 	)
 }
 

@@ -21,8 +21,8 @@ import (
 
 var (
 	ProviderToken          string
-	MesheryApiBaseUrl      string
-	MesheryCloudApiBaseUrl string
+	MesheryAPIBaseURL      string
+	MesheryCloudAPIBaseURL string
 	Log                    logger.Handler
 )
 
@@ -51,7 +51,7 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 		-e, --email string	email address to notify when snapshot is ready (required)
 		-h			Help for Helm Kanvas Snapshot plugin`,
 
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(_ *cobra.Command, _ []string) error {
 		// Use the extracted name from URI if not provided
 		if designName == "" {
 			designName = ExtractNameFromURI(chartURI)
@@ -156,7 +156,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 
 	sourceType := "Helm Chart"
 	encodedChartType := url.PathEscape(sourceType)
-	fullURL := fmt.Sprintf("%s/api/pattern/%s", MesheryApiBaseUrl, encodedChartType)
+	fullURL := fmt.Sprintf("%s/api/pattern/%s", MesheryAPIBaseURL, encodedChartType)
 
 	// Create the request
 	req, err := http.NewRequest("POST", fullURL, bytes.NewBuffer(payloadBytes))
@@ -167,8 +167,8 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 
 	// Set headers and log them
 	req.Header.Set("Cookie", ProviderToken)
-	req.Header.Set("Origin", MesheryApiBaseUrl)
-	req.Header.Set("Host", MesheryApiBaseUrl)
+	req.Header.Set("Origin", MesheryAPIBaseURL)
+	req.Header.Set("Host", MesheryAPIBaseURL)
 	req.Header.Set("Content-Type", "text/plain;charset=UTF-8")
 	req.Header.Set("Accept-Encoding", "gzip, deflate, br, zstd")
 	req.Header.Set("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8")
@@ -205,7 +205,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 	return "", errors.ErrCreatingMesheryDesign(fmt.Errorf("failed to extract design ID from response"))
 }
 
-func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
+func GenerateSnapshot(designID, _, email, assetLocation string) error {
 	payload := map[string]interface{}{
 		"Payload": map[string]string{
 			"application_type": "Helm Chart",
@@ -224,7 +224,7 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 	// Create the POST request
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf("%s/api/integrations/trigger/workflow", MesheryCloudApiBaseUrl),
+		fmt.Sprintf("%s/api/integrations/trigger/workflow", MesheryCloudAPIBaseURL),
 		bytes.NewBuffer(payloadBytes),
 	)
 	if err != nil {
@@ -233,7 +233,7 @@ func GenerateSnapshot(designID, chartURI, email, assetLocation string) error {
 
 	req.Header.Set("Cookie", ProviderToken)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Referer", fmt.Sprintf("%s/dashboard", MesheryCloudApiBaseUrl))
+	req.Header.Set("Referer", fmt.Sprintf("%s/dashboard", MesheryCloudAPIBaseURL))
 
 	client := &http.Client{}
 
