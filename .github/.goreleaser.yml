@@ -39,11 +39,11 @@ archives:
       - LICENSE
       - install-binary.sh
 
-snapshot:
-  version_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Runtime.Goos }}_{{ .Runtime.Goarch }}"
-
 checksum:
   name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ .Tag }}-next"
 
 changelog:
   sort: asc
