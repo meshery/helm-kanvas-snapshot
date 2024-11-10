@@ -39,11 +39,11 @@ archives:
       - LICENSE
       - install-binary.sh
 
-snapshot:
-  version_template: "{{ .Tag }}-next"
-
 checksum:
   name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ .Tag }}-next"
 
 changelog:
   sort: asc
