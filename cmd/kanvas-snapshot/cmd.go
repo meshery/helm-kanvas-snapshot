@@ -51,7 +51,7 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 		-e, --email string	email address to notify when snapshot is ready (required)
 		-h			Help for Helm Kanvas Snapshot plugin`,
 
-	RunE: func(_ *cobra.Command, args []string) error {
+	RunE: func(_ *cobra.Command, _ []string) error {
 		// Use the extracted name from URI if not provided
 		if designName == "" {
 			designName = ExtractNameFromURI(chartURI)
