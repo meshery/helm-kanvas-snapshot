@@ -25,7 +25,6 @@ if [ "$SKIP_BIN_INSTALL" = "1" ]; then
   exit
 fi
 
-
 # initArch discovers the architecture for this system.
 initArch() {
   ARCH=$(uname -m)
@@ -66,7 +65,6 @@ verifySupported() {
       supported+="${os}-${arch}\n"
     done
   done
-  echo "supported: ${supported[@]}"
   if ! echo "${supported}" | grep -q "${OS}-${ARCH}"; then
     echo "No prebuild binary for ${OS}-${ARCH}."
     exit 1
@@ -98,10 +96,8 @@ downloadFile() {
   PLUGIN_TMP_FILE="/tmp/${PROJECT_NAME}.tar.gz"
   echo "Downloading $DOWNLOAD_URL"
   if type "curl" > /dev/null; then
-    echo "curl -L $DOWNLOAD_URL -o $PLUGIN_TMP_FILE"
     curl -L "$DOWNLOAD_URL" -o "$PLUGIN_TMP_FILE"
   elif type "wget" > /dev/null; then
-   echo "wget -q -O $PLUGIN_TMP_FILE $DOWNLOAD_URL"
     wget -q -O "$PLUGIN_TMP_FILE" "$DOWNLOAD_URL"
   fi
 }
@@ -143,8 +139,7 @@ getDownloadURL
 downloadFile
 installFile
 echo
-echo "helm-kanvas-snapshot is installed."
-echo "${HELM_PLUGIN_DIR}/bin/helm-kanvas-snapshot" -h
+echo "helm-kanvas-snapshot is installed at ${HELM_PLUGIN_DIR}/bin/helm-kanvas-snapshot"
 echo
 echo "See https://github.com/$PROJECT_GH#readme for more information on getting started."
 
