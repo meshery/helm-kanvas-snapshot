@@ -1,100 +1,150 @@
-#! /bin/bash -e
+#!/usr/bin/env bash
 
-function handle_exit() {
+PROJECT_NAME="helm-kanvas-snapshot"
+PROJECT_GH="meshery/$PROJECT_NAME"
+
+# Convert the HELM_PLUGIN_PATH to unix if cygpath is
+# available. This is the case when using MSYS2 or Cygwin
+# on Windows where helm returns a Windows path but we
+# need a Unix path
+if command -v cygpath >/dev/null 2>&1; then
+  HELM_BIN="$(cygpath -u "${HELM_BIN}")"
+  HELM_PLUGIN_DIR="$(cygpath -u "${HELM_PLUGIN_DIR}")"
+fi
+
+[ -z "$HELM_BIN" ] && HELM_BIN=$(command -v helm)
+
+[ -z "$HELM_HOME" ] && HELM_HOME=$(helm env | grep 'HELM_DATA_HOME' | cut -d '=' -f2 | tr -d '"')
+
+mkdir -p "$HELM_HOME"
+
+: "${HELM_PLUGIN_DIR:="$HELM_HOME/plugins/$PROJECT_NAME"}"
+
+if [ "$SKIP_BIN_INSTALL" = "1" ]; then
+  echo "Skipping binary install"
+  exit
+fi
+
+
+# initArch discovers the architecture for this system.
+initArch() {
+  ARCH=$(uname -m)
+  case $ARCH in
+    armv5*) ARCH="arm";;
+    armv6*) ARCH="arm";;
+    armv7*) ARCH="arm";;
+    aarch64) ARCH="arm64";;
+    x86) ARCH="386";;
+    x86_64) ARCH="x86_64";;
+    i686) ARCH="i386";;
+    i386) ARCH="i386";;
+  esac
+}
+
+# initOS discovers the operating system for this system.
+initOS() {
+  OS=$(uname -s)
+
+  case "$OS" in
+  Windows_NT) OS='windows' ;;
+  # Msys support
+  MSYS*) OS='windows' ;;
+  # Minimalist GNU for Windows
+  MINGW*) OS='windows' ;;
+  CYGWIN*) OS='windows' ;;
+  Darwin) OS='darwin' ;;
+  Linux) OS='linux' ;;
+  esac
+}
+
+# verifySupported checks that the os/arch combination is supported for
+# binary builds.
+verifySupported() {
+  local supported=""
+  for os in darwin freebsd linux windows; do
+    for arch in arm arm64 i386 x86_64 386 amd64; do
+      supported+="${os}-${arch}\n"
+    done
+  done
+  echo "supported: ${supported[@]}"
+  if ! echo "${supported}" | grep -q "${OS}-${ARCH}"; then
+    echo "No prebuild binary for ${OS}-${ARCH}."
+    exit 1
+  fi
+
+  if ! type "curl" > /dev/null && ! type "wget" > /dev/null; then
+    echo "Either curl or wget is required"
+    exit 1
+  fi
+}
+
+# getDownloadURL checks the latest available version.
+getDownloadURL() {
+  version=$(git -C "$HELM_PLUGIN_DIR" describe --tags --abbrev=0 2> /dev/null)
+  # remove the 'v' at the beginning of the version
+  version_without_v=$(git -C "$HELM_PLUGIN_DIR" describe --tags --abbrev=0 2> /dev/null | sed 's/^v//')
+  PROJECT_NAME_WITH_VERSION="${PROJECT_NAME}_${version_without_v}_${OS}_${ARCH}"
+  if [ -n "$version" ]; then
+    DOWNLOAD_URL="https://github.com/$PROJECT_GH/releases/download/$version/$PROJECT_NAME_WITH_VERSION.tar.gz"
+  else
+    echo "No release found. "
+    exit 1
+  fi
+}
+
+# downloadFile downloads the latest binary package and also the checksum
+# for that binary.
+downloadFile() {
+  PLUGIN_TMP_FILE="/tmp/${PROJECT_NAME}.tar.gz"
+  echo "Downloading $DOWNLOAD_URL"
+  if type "curl" > /dev/null; then
+    echo "curl -L $DOWNLOAD_URL -o $PLUGIN_TMP_FILE"
+    curl -L "$DOWNLOAD_URL" -o "$PLUGIN_TMP_FILE"
+  elif type "wget" > /dev/null; then
+   echo "wget -q -O $PLUGIN_TMP_FILE $DOWNLOAD_URL"
+    wget -q -O "$PLUGIN_TMP_FILE" "$DOWNLOAD_URL"
+  fi
+}
+
+# installFile verifies the SHA256 for the file, then unpacks and
+# installs it.
+installFile() {
+  HELM_TMP="/tmp/$PROJECT_NAME"
+  HELM_TMP_BIN="/tmp/$PROJECT_NAME/$PROJECT_NAME_WITH_VERSION/$PROJECT_NAME"
+  mkdir -p "$HELM_TMP"
+  tar xzf "$PLUGIN_TMP_FILE" -C "$HELM_TMP"
+  if [ "${OS}" = "windows" ]; then
+    HELM_TMP_BIN="$HELM_TMP_BIN.exe"
+  fi
+  echo "Preparing to install into ${HELM_PLUGIN_DIR}"
+  mkdir -p "$HELM_PLUGIN_DIR/bin"
+  cp "$HELM_TMP_BIN" "$HELM_PLUGIN_DIR/bin"
+}
+
+# fail_trap is executed if an error occurs.
+fail_trap() {
   result=$?
   if [ "$result" != "0" ]; then
-    printf "Failed to install helm-kanvas-snapshot plugin\n"
+    echo "Failed to install $PROJECT_NAME"
+    echo "\tFor support, open issue at https://github.com/$PROJECT_GH."
   fi
   exit $result
 }
 
-function normalize_architecture() {
-    arch=$1
+# Execution
 
-    case "$arch" in
-      "aarch64")
-      echo "arm64"
-      ;;
-      *)
-      echo $arch
-      ;;
-    esac
-}
+#Stop execution on any error
+trap "fail_trap" EXIT
+set -e
+initArch
+initOS
+verifySupported
+getDownloadURL
+downloadFile
+installFile
+echo
+echo "helm-kanvas-snapshot is installed."
+echo "${HELM_PLUGIN_DIR}/bin/helm-kanvas-snapshot" -h
+echo
+echo "See https://github.com/$PROJECT_GH#readme for more information on getting started."
 
-function download_plugin() {
-  OUTPUT_BASENAME=helm-kanvas-snapshot
-
-  if [[ -n "$LOCAL_FILE_PATH" ]]; then
-    OUTPUT_BASENAME_WITH_POSTFIX="$LOCAL_FILE_PATH"
-    echo -e "Using local archive at ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
-  else
-    version=$(grep version "$HELM_PLUGIN_DIR/plugin.yaml" | cut -d'"' -f2)
-    DOWNLOAD_URL="https://github.com/meshery/helm-kanvas-snapshot/releases/download/v$version/helm-kanvas-snapshot_${version}_${os_name}_${os_arch}.tar.gz"
-    OUTPUT_BASENAME_WITH_POSTFIX="$HELM_PLUGIN_DIR/$OUTPUT_BASENAME.tar.gz"
-
-    echo -e "Download URL set to ${DOWNLOAD_URL}\n"
-    echo -e "Artifact path: ${OUTPUT_BASENAME_WITH_POSTFIX}\n"
-
-    if [[ -n $(command -v curl) ]]; then
-      if curl --fail -L "${DOWNLOAD_URL}" -o "${OUTPUT_BASENAME_WITH_POSTFIX}"; then
-        echo -e "Successfully downloaded the archive, proceeding to install\n"
-      else
-        echo -e "Failed while downloading helm-kanvas-snapshot archive\n"
-        exit 1
-      fi
-    else
-      echo "curl is required to download the plugin"
-      exit -1
-    fi
-  fi
-}
-
-
-function install_plugin() {
-  local HELM_PLUGIN_ARTIFACT_PATH=${OUTPUT_BASENAME_WITH_POSTFIX}
-  local PROJECT_NAME="helm-kanvas-snapshot"
-  local HELM_PLUGIN_TEMP_PATH="/tmp/$PROJECT_NAME"
-
-  echo -n "HELM_PLUGIN_ARTIFACT_PATH: ${HELM_PLUGIN_ARTIFACT_PATH}"
-  rm -rf "${HELM_PLUGIN_TEMP_PATH}"
-
-  echo -e "Preparing to install into ${HELM_PLUGIN_DIR}\n"
-  mkdir -p "${HELM_PLUGIN_TEMP_PATH}"
-  tar -xvf "${HELM_PLUGIN_ARTIFACT_PATH}" -C "${HELM_PLUGIN_TEMP_PATH}"
-  mkdir -p "$HELM_PLUGIN_DIR/bin"
-  mv "${HELM_PLUGIN_TEMP_PATH}/helm-kanvas-snapshot" "${HELM_PLUGIN_DIR}/bin/helm-kanvas-snapshot"
-  rm -rf "${HELM_PLUGIN_TEMP_PATH}"
-  rm -rf "${HELM_PLUGIN_ARTIFACT_PATH}"
-}
-
-function install() {
-  echo "Installing helm-kanvas-snapshot..."
-
-  download_plugin
-  status=$?
-  if [ $status -ne 0 ]; then
-    echo -e "Downloading plugin failed\n"
-    exit 1
-  fi
-
-  set +e
-  install_plugin
-  local install_status=$?
-  set -e
-
-  if [ "$install_status" != "0" ]; then
-    echo "Installing helm-kanvas-snapshot plugin failed with error code: ${install_status}"
-    exit 1
-  fi
-
-  echo
-  echo "helm-kanvas-snapshot is installed."
-  echo
-  "${HELM_PLUGIN_DIR}/bin/helm-kanvas-snapshot" -h
-  echo
-  echo "See https://github.com/meshery/helm-kanvas-snapshot#readme for more information on getting started."
-}
-
-trap "handle_exit" EXIT
-
-install "$@"
