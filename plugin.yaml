@@ -1,5 +1,5 @@
 name: "helm-kanvas-snapshot"
-version: "0.3.8"
+version: "0.3.9"
 usage: "Generate a visual snapshot of your Helm chart as a Meshery Design"
 description: "A Helm plugin to generate Meshery designs from Helm charts and snapshot their visual representation."
 useTunnel: true
