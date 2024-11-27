@@ -263,7 +263,10 @@ func isValidEmail(email string) bool {
 	return emailRegex.MatchString(email)
 }
 
-func Main() {
+func Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL string) {
+	ProviderToken = providerToken
+	MesheryCloudAPIBaseURL = mesheryCloudAPIBaseURL
+	MesheryAPIBaseURL = mesheryAPIBaseURL
 	generateKanvasSnapshotCmd.Flags().StringVarP(&chartURI, "file", "f", "", "URI to Helm chart (required)")
 	generateKanvasSnapshotCmd.Flags().StringVarP(&designName, "design-name", "n", "", "Optional name for the Meshery design")
 	generateKanvasSnapshotCmd.Flags().StringVarP(&email, "email", "e", "", "Optional email to associate with the Meshery design")
