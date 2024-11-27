@@ -5,9 +5,9 @@ import (
 )
 
 var (
-	providerToken string
+	providerToken          string
 	mesheryCloudAPIBaseURL string
-	mesheryAPIBaseURL string
+	mesheryAPIBaseURL      string
 )
 
 func main() {
