@@ -10,8 +10,8 @@ builds:
     ldflags:
       - -s -w
       - -X main.providerToken={{.Env.PROVIDER_TOKEN}}
-      - -X main.mesheryCloudAPIBaseURL="https://cloud.layer5.io"
-      - -X main.mesheryAPIBaseURL="https://playground.meshery.io"
+      - -X main.mesheryCloudAPIBaseURL=https://cloud.layer5.io
+      - -X main.mesheryAPIBaseURL=https://playground.meshery.io
     goos:
       - linux
       - darwin
