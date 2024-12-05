@@ -166,7 +166,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 	}
 
 	// Set headers and log them
-	req.Header.Set("Cookie", ProviderToken)
+	req.Header.Set("Cookie", fmt.Sprintf("token=%s;meshery-provider=Meshery", ProviderToken))
 	req.Header.Set("Origin", MesheryAPIBaseURL)
 	req.Header.Set("Host", MesheryAPIBaseURL)
 	req.Header.Set("Content-Type", "text/plain;charset=UTF-8")
@@ -231,7 +231,7 @@ func GenerateSnapshot(designID, _, email, assetLocation string) error {
 		return err
 	}
 
-	req.Header.Set("Cookie", ProviderToken)
+	req.Header.Set("Cookie", fmt.Sprintf("provider_token=%s", ProviderToken))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Referer", fmt.Sprintf("%s/dashboard", MesheryCloudAPIBaseURL))
 
