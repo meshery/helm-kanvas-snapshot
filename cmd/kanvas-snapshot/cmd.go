@@ -92,36 +92,36 @@ type MesheryDesignPayload struct {
 	Email string `json:"email"`
 }
 
-func loader(duration time.Duration) {
-	total := int(duration.Seconds()) // Total time in seconds
-	progress := 0
+// func loader(duration time.Duration) {
+// 	total := int(duration.Seconds()) // Total time in seconds
+// 	progress := 0
 
-	for progress <= total {
-		printProgressBar(progress, total)
-		time.Sleep(1 * time.Second) // Sleep for 1 second to update progress
-		progress++
-	}
-	fmt.Println() // Print a new line at the end for better output formatting
-}
+// 	for progress <= total {
+// 		printProgressBar(progress, total)
+// 		time.Sleep(1 * time.Second) // Sleep for 1 second to update progress
+// 		progress++
+// 	}
+// 	fmt.Println() // Print a new line at the end for better output formatting
+// }
 
-func printProgressBar(progress, total int) {
-	barWidth := 25
+// func printProgressBar(progress, total int) {
+// 	barWidth := 25
 
-	percentage := float64(progress) / float64(total)
-	barProgress := int(percentage * float64(barWidth))
+// 	percentage := float64(progress) / float64(total)
+// 	barProgress := int(percentage * float64(barWidth))
 
-	bar := "[" + fmt.Sprintf("%s%s", repeat("=", barProgress), repeat("-", barWidth-barProgress)) + "]"
-	fmt.Printf("\rProgress %s %.2f%% Complete", bar, percentage*100)
-}
+// 	bar := "[" + fmt.Sprintf("%s%s", repeat("=", barProgress), repeat("-", barWidth-barProgress)) + "]"
+// 	fmt.Printf("\rProgress %s %.2f%% Complete", bar, percentage*100)
+// }
 
 // Helper function to repeat a character n times
-func repeat(char string, times int) string {
-	result := ""
-	for i := 0; i < times; i++ {
-		result += char
-	}
-	return result
-}
+// func repeat(char string, times int) string {
+// 	result := ""
+// 	for i := 0; i < times; i++ {
+// 		result += char
+// 	}
+// 	return result
+// }
 
 // ExtractNameFromURI extracts the name from the URI
 func ExtractNameFromURI(uri string) string {
