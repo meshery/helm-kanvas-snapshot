@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/layer5io/meshkit/logger"
 	"github.com/meshery/helm-kanvas-snapshot/internal/errors"
