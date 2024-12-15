@@ -23,7 +23,7 @@ var (
 	ProviderToken          string
 	MesheryAPIBaseURL      string
 	MesheryCloudAPIBaseURL string
-	WorkflowAccessToken   string
+	WorkflowAccessToken    string
 	Log                    logger.Handler
 )
 
