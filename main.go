@@ -8,8 +8,9 @@ var (
 	providerToken          string
 	mesheryCloudAPIBaseURL string
 	mesheryAPIBaseURL      string
+	workflowAccessToken 	string
 )
 
 func main() {
-	cmd.Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL)
+	cmd.Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL, workflowAccessToken)
 }
