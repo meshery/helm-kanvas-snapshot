@@ -76,7 +76,7 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 		}
 
 		if email == "" {
-			loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
+			// loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
 			Log.Infof("\nSnapshot generated. Snapshot URL: %s\n", assetLocation)
 		} else {
 			Log.Info("You will be notified via email when your snapshot is ready.")
@@ -240,7 +240,6 @@ func Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL, workflowAcce
 	generateKanvasSnapshotCmd.Flags().StringVarP(&email, "email", "e", "", "Optional email to associate with the Meshery design")
 
 	_ = generateKanvasSnapshotCmd.MarkFlagRequired("file")
-	_ = generateKanvasSnapshotCmd.MarkFlagRequired("email")
 
 	if err := generateKanvasSnapshotCmd.Execute(); err != nil {
 		Log.Error(err)
