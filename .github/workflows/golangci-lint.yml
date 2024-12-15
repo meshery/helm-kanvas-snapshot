@@ -63,6 +63,7 @@ jobs:
         env:
           RELEASE_CHANNEL: "edge"
           PROVIDER_TOKEN: ${{ secrets.PROVIDER_TOKEN }}
+          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         with:
           version: 2
           args: release --snapshot --skip publish --clean -f .github/.goreleaser.yml

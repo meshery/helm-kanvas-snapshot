@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/layer5io/meshkit/logger"
 	"github.com/meshery/helm-kanvas-snapshot/internal/errors"
@@ -23,6 +22,7 @@ var (
 	ProviderToken          string
 	MesheryAPIBaseURL      string
 	MesheryCloudAPIBaseURL string
+	WorkflowAccessToken    string
 	Log                    logger.Handler
 )
 
@@ -69,13 +69,13 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 		assetLocation := fmt.Sprintf("https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/action-assets/%s.png", designID)
 
 		// Generate Snapshot
-		err = GenerateSnapshot(designID, chartURI, email, assetLocation)
+		err = GenerateSnapshot(designID, assetLocation, WorkflowAccessToken)
 		if err != nil {
 			handleError(errors.ErrGeneratingSnapshot(err))
 		}
 
 		if email == "" {
-			loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
+			// loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
 			Log.Infof("\nSnapshot generated. Snapshot URL: %s\n", assetLocation)
 		} else {
 			Log.Info("You will be notified via email when your snapshot is ready.")
@@ -91,36 +91,36 @@ type MesheryDesignPayload struct {
 	Email string `json:"email"`
 }
 
-func loader(duration time.Duration) {
-	total := int(duration.Seconds()) // Total time in seconds
-	progress := 0
+// func loader(duration time.Duration) {
+// 	total := int(duration.Seconds()) // Total time in seconds
+// 	progress := 0
 
-	for progress <= total {
-		printProgressBar(progress, total)
-		time.Sleep(1 * time.Second) // Sleep for 1 second to update progress
-		progress++
-	}
-	fmt.Println() // Print a new line at the end for better output formatting
-}
+// 	for progress <= total {
+// 		printProgressBar(progress, total)
+// 		time.Sleep(1 * time.Second) // Sleep for 1 second to update progress
+// 		progress++
+// 	}
+// 	fmt.Println() // Print a new line at the end for better output formatting
+// }
 
-func printProgressBar(progress, total int) {
-	barWidth := 25
+// func printProgressBar(progress, total int) {
+// 	barWidth := 25
 
-	percentage := float64(progress) / float64(total)
-	barProgress := int(percentage * float64(barWidth))
+// 	percentage := float64(progress) / float64(total)
+// 	barProgress := int(percentage * float64(barWidth))
 
-	bar := "[" + fmt.Sprintf("%s%s", repeat("=", barProgress), repeat("-", barWidth-barProgress)) + "]"
-	fmt.Printf("\rProgress %s %.2f%% Complete", bar, percentage*100)
-}
+// 	bar := "[" + fmt.Sprintf("%s%s", repeat("=", barProgress), repeat("-", barWidth-barProgress)) + "]"
+// 	fmt.Printf("\rProgress %s %.2f%% Complete", bar, percentage*100)
+// }
 
 // Helper function to repeat a character n times
-func repeat(char string, times int) string {
-	result := ""
-	for i := 0; i < times; i++ {
-		result += char
-	}
-	return result
-}
+// func repeat(char string, times int) string {
+// 	result := ""
+// 	for i := 0; i < times; i++ {
+// 		result += char
+// 	}
+// 	return result
+// }
 
 // ExtractNameFromURI extracts the name from the URI
 func ExtractNameFromURI(uri string) string {
@@ -166,7 +166,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 	}
 
 	// Set headers and log them
-	req.Header.Set("Cookie", ProviderToken)
+	req.Header.Set("Cookie", fmt.Sprintf("token=%s;meshery-provider=Meshery", ProviderToken))
 	req.Header.Set("Origin", MesheryAPIBaseURL)
 	req.Header.Set("Host", MesheryAPIBaseURL)
 	req.Header.Set("Content-Type", "text/plain;charset=UTF-8")
@@ -205,56 +205,22 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 	return "", errors.ErrCreatingMesheryDesign(fmt.Errorf("failed to extract design ID from response"))
 }
 
-func GenerateSnapshot(designID, _, email, assetLocation string) error {
-	payload := map[string]interface{}{
-		"Payload": map[string]string{
-			"application_type": "Helm Chart",
-			"designID":         designID,
-			"email":            email,
-			"assetLocation":    assetLocation,
-		},
-	}
-
-	// Marshal the payload into JSON
-	payloadBytes, err := json.Marshal(payload)
+func GenerateSnapshot(contentID, assetLocation string, ghAccessToken string) error {
+	payload := fmt.Sprintf(`{"ref":"master","inputs":{"contentID":"%s","assetLocation":"%s"}}`, contentID, assetLocation)
+	req, err := http.NewRequest("POST", "https://api.github.com/repos/meshery/helm-kanvas-snapshot/actions/workflows/kanvas.yml/dispatches", bytes.NewBuffer([]byte(payload)))
 	if err != nil {
 		return err
 	}
-
-	// Create the POST request
-	req, err := http.NewRequest(
-		"POST",
-		fmt.Sprintf("%s/api/integrations/trigger/workflow", MesheryCloudAPIBaseURL),
-		bytes.NewBuffer(payloadBytes),
-	)
-	if err != nil {
-		return err
-	}
-
-	req.Header.Set("Cookie", ProviderToken)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Referer", fmt.Sprintf("%s/dashboard", MesheryCloudAPIBaseURL))
+	req.Header.Set("Accept", "application/vnd.github+json")
+	req.Header.Set("Authorization", "Bearer "+ghAccessToken)
+	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
 
 	client := &http.Client{}
-
 	resp, err := client.Do(req)
 	if err != nil {
-		return errors.ErrHTTPPostRequest(err)
+		return err
 	}
 	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-		return errors.ErrUnexpectedResponseCode(resp.StatusCode, string(body))
-	}
-
-	// Decode response
-	var result []map[string]interface{}
-	err = json.NewDecoder(resp.Body).Decode(&result)
-	if err != nil {
-		body, _ := io.ReadAll(resp.Body)
-		return errors.ErrDecodingAPI(fmt.Errorf("failed to decode json. body: %s, error: %w", body, err))
-	}
 
 	return nil
 }
@@ -263,16 +229,16 @@ func isValidEmail(email string) bool {
 	return emailRegex.MatchString(email)
 }
 
-func Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL string) {
+func Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL, workflowAccessToken string) {
 	ProviderToken = providerToken
 	MesheryCloudAPIBaseURL = mesheryCloudAPIBaseURL
 	MesheryAPIBaseURL = mesheryAPIBaseURL
+	WorkflowAccessToken = workflowAccessToken
 	generateKanvasSnapshotCmd.Flags().StringVarP(&chartURI, "file", "f", "", "URI to Helm chart (required)")
 	generateKanvasSnapshotCmd.Flags().StringVarP(&designName, "design-name", "n", "", "Optional name for the Meshery design")
 	generateKanvasSnapshotCmd.Flags().StringVarP(&email, "email", "e", "", "Optional email to associate with the Meshery design")
 
 	_ = generateKanvasSnapshotCmd.MarkFlagRequired("file")
-	_ = generateKanvasSnapshotCmd.MarkFlagRequired("email")
 
 	if err := generateKanvasSnapshotCmd.Execute(); err != nil {
 		Log.Error(err)
