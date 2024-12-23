@@ -43,4 +43,4 @@ jobs:
         env:
           RELEASE_CHANNEL: "stable"
           PROVIDER_TOKEN: ${{ secrets.PROVIDER_TOKEN }}
-          GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+          GH_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
