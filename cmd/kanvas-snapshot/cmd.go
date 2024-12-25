@@ -208,7 +208,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 func GenerateSnapshot(contentID, assetLocation string, ghAccessToken string) error {
 	payload := fmt.Sprintf(`{"ref":"master","inputs":{"contentID":"%s","assetLocation":"%s"}}`, contentID, assetLocation)
 	fmt.Println("check for access token", len(ghAccessToken))
-	req, err := http.NewRequest("POST", "https://api.github.com/repos/thebeginner86/my-yamls/actions/workflows/kanvas.yml/dispatches", bytes.NewBuffer([]byte(payload)))
+	req, err := http.NewRequest("POST", "https://api.github.com/repos/meshery/helm-kanvas-snapshot/actions/workflows/kanvas.yml/dispatches", bytes.NewBuffer([]byte(payload)))
 	fmt.Println(err)
 	if err != nil {
 		return err
