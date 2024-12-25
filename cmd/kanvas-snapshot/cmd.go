@@ -207,9 +207,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 
 func GenerateSnapshot(contentID, assetLocation string, ghAccessToken string) error {
 	payload := fmt.Sprintf(`{"ref":"master","inputs":{"contentID":"%s","assetLocation":"%s"}}`, contentID, assetLocation)
-	fmt.Println("check for access token", len(ghAccessToken))
 	req, err := http.NewRequest("POST", "https://api.github.com/repos/meshery/helm-kanvas-snapshot/actions/workflows/kanvas.yml/dispatches", bytes.NewBuffer([]byte(payload)))
-	fmt.Println(err)
 	if err != nil {
 		return err
 	}
@@ -219,23 +217,10 @@ func GenerateSnapshot(contentID, assetLocation string, ghAccessToken string) err
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-	fmt.Println(err)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-
-	// read response
-
-	// Decode response
-	var result map[string]interface{}
-	err = json.NewDecoder(resp.Body).Decode(&result)
-	if err != nil {
-		body, _ := io.ReadAll(resp.Body)
-		return errors.ErrDecodingAPI(fmt.Errorf("failed to decode json. body: %s, error: %w", body, err))
-	}
-
-	fmt.Printf("%#v\n", result)
 
 	return nil
 }
