@@ -221,6 +221,13 @@ func GenerateSnapshot(contentID, assetLocation string, ghAccessToken string) err
 		return err
 	}
 	defer resp.Body.Close()
+	fmt.Println(resp.Status)
+	bdy, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println(string(bdy))
 
 	return nil
 }
