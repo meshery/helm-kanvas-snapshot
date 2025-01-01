@@ -72,7 +72,7 @@ To install the Meshery Snapshot Helm Plugin, use the following steps:
 Once the plugin is installed, you can generate a snapshot using either a packaged or unpackaged Helm chart.
 
 ```bash
-helm snapshot -f <chart-URI> [-n <snapshot-name>] [-e <email>]
+helm helm-kanvas-snapshot -f <chart-URI> [-n <snapshot-name>] [-e <email>]
 ```
 
 - **`-f`**, **`--file`**: (required) path or URL to the Helm chart (required).
@@ -84,7 +84,7 @@ helm snapshot -f <chart-URI> [-n <snapshot-name>] [-e <email>]
 To generate a snapshot for a Helm chart located at `https://meshery.io/charts/v0.8.0-meshery.tar.gz`, you can use:
 
 ```bash
-helm snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz -n meshery-chart
+helm helm-kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz -n meshery-chart
 ```
 
 ## Contributing
@@ -128,7 +128,7 @@ helm plugin install kanvas-snapshot
 Once the plugin is built, you can test it locally. For example, to generate a snapshot for a Helm chart, run the following command:
 
 ```bash
-helm kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz -n meshery-chart
+helm helm-kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz -n meshery-chart
 ```
 
 This command will trigger the snapshot generation process. If everything is set up correctly, you should see a visual snapshot URL or receive the snapshot via email, depending on the options you specified.
