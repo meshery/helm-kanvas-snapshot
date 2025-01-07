@@ -39,16 +39,17 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 	Short: "Generate a Kanvas snapshot using a Helm chart",
 	Long: `Generate a Kanvas snapshot by providing a Helm chart URI.
 
+	    helm kanvas-snapshot -f <helm-chart-uri> -e[email] --name[name]
 		This command allows you to generate a snapshot in Meshery using a Helm chart.
 
 		Example usage:
 
-		helm kanvas-snapshot -n nginx-helm -f https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz -e your-email@example.com
+		helm kanvas-snapshot -f https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz -e your-email@example.com --name nginx-helm
 
 		Flags:
-		-f, --file string	URI to Helm chart (required)
-		-n, --name string	(optional name for the Meshery design
+		-f, --file  string	URI to Helm chart (required)
 		-e, --email string	email address to notify when snapshot is ready (required)
+		    --name  string	(optional name for the Meshery design
 		-h			Help for Helm Kanvas Snapshot plugin`,
 
 	RunE: func(_ *cobra.Command, _ []string) error {
@@ -66,9 +67,8 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 			handleError(errors.ErrCreatingMesheryDesign(err))
 		}
 
-		assetLocation := fmt.Sprintf("https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/action-assets/%s.png", designID)
+		assetLocation := fmt.Sprintf("https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/action-assets/helm-plugin-assets/%s.png", designID)
 
-		// Generate Snapshot
 		err = GenerateSnapshot(designID, assetLocation, WorkflowAccessToken)
 		if err != nil {
 			handleError(errors.ErrGeneratingSnapshot(err))
@@ -243,14 +243,16 @@ func Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL, workflowAcce
 	MesheryAPIBaseURL = mesheryAPIBaseURL
 	WorkflowAccessToken = workflowAccessToken
 	generateKanvasSnapshotCmd.Flags().StringVarP(&chartURI, "file", "f", "", "URI to Helm chart (required)")
-	generateKanvasSnapshotCmd.Flags().StringVarP(&designName, "design-name", "n", "", "Optional name for the Meshery design")
+	generateKanvasSnapshotCmd.Flags().StringVar(&designName, "name", "", "Optional name for the Meshery design")
 	generateKanvasSnapshotCmd.Flags().StringVarP(&email, "email", "e", "", "Optional email to associate with the Meshery design")
 
 	_ = generateKanvasSnapshotCmd.MarkFlagRequired("file")
 
 	if err := generateKanvasSnapshotCmd.Execute(); err != nil {
-		Log.Error(err)
-		os.Exit(1)
+		errors.ErrHTTPPostRequest(err)
+		generateKanvasSnapshotCmd.SetFlagErrorFunc(func(cmd *cobra.Command, err error) error {
+			return nil
+		})
 	}
 }
 
