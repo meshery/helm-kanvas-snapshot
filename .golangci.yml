@@ -15,3 +15,11 @@ linters:
 linters-settings:
   gofmt:
     simplify: true
+issues:
+  exclude-dirs:
+    - '.*pkg/mod.*'
+    - '.*go/.*'
+    - '.*Cellar.*'             # Skip Homebrew Go installation directory
+    - '.*libexec.*'
+  exclude-files:
+    - '.*toolchain@.*'

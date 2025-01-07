@@ -1,6 +1,6 @@
 module github.com/meshery/helm-kanvas-snapshot
 
-go 1.21.8
+go 1.23
 
 toolchain go1.23.4
 
