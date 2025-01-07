@@ -39,7 +39,6 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 	Short: "Generate a Kanvas snapshot using a Helm chart",
 	Long: `Generate a Kanvas snapshot by providing a Helm chart URI.
 
-	    helm kanvas-snapshot -f <helm-chart-uri> -e[email] --name[name]
 		This command allows you to generate a snapshot in Meshery using a Helm chart.
 
 		Example usage:
