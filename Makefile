@@ -96,7 +96,7 @@ print_home:
 
 
 local.deploy: local.build ## Deploys locally built Helm plugin
-  @rm -rf ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin/helm-kanvas-snapshot
+	@rm -rf ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin/helm-kanvas-snapshot
 	@cp helm-images ${HOME}/Library/helm/plugins/helm-kanvas-snapshot/bin/helm-kanvas-snapshot
 
 
