@@ -4,7 +4,7 @@ on:
     types: [opened]
 jobs:
   welcome:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: >-
       (github.repository == 'meshery/meshery') &&
       (github.event.action == 'opened') &&

@@ -29,7 +29,7 @@ permissions:
   id-token: write
 jobs:
   KanvasScreenshot:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       resource_url: ${{ steps.test_result.outputs.resource_url }}
     steps:
