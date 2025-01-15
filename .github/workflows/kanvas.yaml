@@ -54,9 +54,9 @@ jobs:
       - id: test_result
         uses: layer5labs/kanvas-snapshot@v0.2.20
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          mesheryToken: ${{ secrets.MESHERY_TOKEN }}
-          prNumber: ${{ env.PULL_NO }}
-          application_type: ${{ inputs.application_type }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
+          mesheryToken: ${{ secrets.MESHERY_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
+          prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
+          application_type: ${{ inputs.application_type }} # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
           assetLocation: ${{ inputs.assetLocation }}
           designID: ${{ inputs.designID }}
