@@ -1,25 +1,30 @@
 name: Kanvas Screenshot Service
 'on':
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_call:
   workflow_dispatch:
     inputs:
-      contentID: 
-        description: ID of the design to render.
-        required: true
+      application_type:
+        description: Type of the application (e.g., Helm Chart, Kubernetes Manifest, Docker Compose)
+        type: string
+        default: "Kubernetes Manifest"
+      designID:
+        description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
         type: string
       assetLocation:
-        required: true
+        description: The location of the snapshot url
         type: string
-        description: Remote location where the generated asset (screenshot) for the design will be stored.
-  workflow_call:
-    inputs:
-      fileName:
-        description: Relative file path from the root directory
-        required: true
+      skipComment:
+        description: Skip comment
+        type: boolean
+      prNumber:
+        description: PR number
         type: string
-    outputs:
-      resource_url:
-        description: The URL of the generated resource.
-        value: ${{ jobs.KanvasScreenshot.outputs.resource_url }}
+        default: "0"
 permissions:
   actions: read
   contents: write
@@ -37,6 +42,10 @@ jobs:
         run: |
           export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           echo "PULL_NO=$pull_number" >> $GITHUB_ENV
+          if [ "$pull_number" = "null" ]; then
+            echo "PULL_NO=${{ inputs.prNumber }}" >> $GITHUB_ENV
+          fi
+          echo "MESHERY_TOKEN=${{ secrets.MESHERY_TOKEN }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -45,10 +54,9 @@ jobs:
       - id: test_result
         uses: layer5labs/kanvas-snapshot@v0.2.20
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
-          mesheryToken: ${{ secrets.MESHERY_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
-          prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
-          application_type: "Design" # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
-          skipComment: true
-          designID: ${{ inputs.contentID }} # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          mesheryToken: ${{ secrets.MESHERY_TOKEN }}
+          prNumber: ${{ env.PULL_NO }}
+          application_type: ${{ inputs.application_type }}
           assetLocation: ${{ inputs.assetLocation }}
+          designID: ${{ inputs.designID }}
