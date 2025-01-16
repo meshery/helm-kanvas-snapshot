@@ -204,11 +204,11 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 	return "", errors.ErrCreatingMesheryDesign(fmt.Errorf("failed to extract design ID from response"))
 }
 
-func GenerateSnapshot(designID, assetLocation string, ghAccessToken string) error {
+func GenerateSnapshot(contentID, assetLocation string, ghAccessToken string) error {
 	fmt.Println(len(ghAccessToken))
 	applicationType := url.PathEscape("Helm Chart")
 
-	payload := fmt.Sprintf(`{"ref":"master","inputs":{"designID":"%s","assetLocation":"%s", "skipComment": true, "application_type": "%s" }}`, designID, assetLocation, applicationType)
+	payload := fmt.Sprintf(`{"ref":"master","inputs":{"contentID":"%s","assetLocation":"%s", "application_type": "%s" }}`, contentID, assetLocation, applicationType)
 	req, err := http.NewRequest("POST", "https://api.github.com/repos/meshery/helm-kanvas-snapshot/actions/workflows/kanvas.yaml/dispatches", bytes.NewBuffer([]byte(payload)))
 	if err != nil {
 		return err
