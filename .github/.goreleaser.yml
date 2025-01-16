@@ -12,7 +12,7 @@ builds:
       - -X main.providerToken={{.Env.PROVIDER_TOKEN}}
       - -X main.mesheryCloudAPIBaseURL=https://cloud.layer5.io
       - -X main.mesheryAPIBaseURL=https://playground.meshery.io
-      - -X main.workflowAccessToken=${{.Env.GH_ACCESS_TOKEN}}
+      - -X main.workflowAccessToken={{.Env.GH_ACCESS_TOKEN}}
     goos:
       - linux
       - darwin
