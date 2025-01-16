@@ -7,12 +7,13 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+      - GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
     ldflags:
       - -s -w
       - -X main.providerToken={{.Env.PROVIDER_TOKEN}}
       - -X main.mesheryCloudAPIBaseURL=https://cloud.layer5.io
       - -X main.mesheryAPIBaseURL=https://playground.meshery.io
-      - -X main.workflowAccessToken=${{ secrets.GITHUB_TOKEN }}
+      - -X main.workflowAccessToken=${{ .Env.GITHUB_TOKEN }}
     goos:
       - linux
       - darwin
