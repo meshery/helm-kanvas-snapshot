@@ -7,8 +7,6 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
-      - GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-      - TEST_VAR=Hello
     ldflags:
       - -s -w
       - -X main.providerToken={{.Env.PROVIDER_TOKEN}}
