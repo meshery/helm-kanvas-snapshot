@@ -59,6 +59,6 @@ jobs:
           application_type: ${{ inputs.application_type }} # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
           assetLocation: ${{ inputs.assetLocation }}
           designID: ${{ inputs.designID }}
-          filePath: ${{ env.PULL_NO == "0" && 'https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz' }} # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
+          filePath: ${{ env.PULL_NO != '0' && 'https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz' }} # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
 
 
