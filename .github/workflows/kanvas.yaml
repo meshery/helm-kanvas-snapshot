@@ -11,7 +11,7 @@ name: Kanvas Screenshot Service
       application_type:
         description: Type of the application (e.g., Helm Chart, Kubernetes Manifest, Docker Compose)
         type: string
-        default: "Helm Chart"
+        default: "Kubernetes Manifest"
       application_url:
         description: Design's source URI; location of the original manifests
         type: string
