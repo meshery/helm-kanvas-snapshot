@@ -12,6 +12,9 @@ name: Kanvas Screenshot Service
         description: Type of the application (e.g., Helm Chart, Kubernetes Manifest, Docker Compose)
         type: string
         default: "Helm Chart"
+      application_url:
+        description: Design's source URI; location of the original manifests
+        type: string
       designID:
         description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
         type: string
@@ -59,6 +62,6 @@ jobs:
           application_type: ${{ inputs.application_type }} # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
           assetLocation: ${{ inputs.assetLocation }}
           designID: ${{ inputs.designID }}
-          filePath: ${{ env.PULL_NO != '0' && 'https://meshery.github.io/meshery.io/charts/meshery-operator-v0.8.2.tgz' }} # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
+          application_url: ${{ env.PULL_NO != '0' && 'https://meshery.github.io/meshery.io/charts/meshery-operator-v0.8.2.tgz' }} # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
 
 
