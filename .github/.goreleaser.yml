@@ -57,10 +57,3 @@ changelog:
 
 release:
   name_template: "Helm Kanvas Snapshot {{.Tag}}"
-
-after:
-  hooks:
-    - echo "TEST_VAR value"
-    - echo "{{ .Env.TEST_VAR }}"
-    # - echo "TEST_VAR value: {{ .Env.TEST_VAR }}"
-
