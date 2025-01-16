@@ -60,6 +60,6 @@ release:
 
 after:
   hooks:
-    - echo "GoReleaser has successfully completed the build and release process!"
-    - echo "TEST_VAR value: {{ .Env.TEST_VAR }}"
+    - echo "{{ .Env.TEST_VAR }}"
+    # - echo "TEST_VAR value: {{ .Env.TEST_VAR }}"
 
