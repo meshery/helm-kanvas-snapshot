@@ -8,6 +8,7 @@ builds:
   - env:
       - CGO_ENABLED=0
       - GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+      - TEST_VAR=Hello
     ldflags:
       - -s -w
       - -X main.providerToken={{.Env.PROVIDER_TOKEN}}
@@ -56,3 +57,9 @@ changelog:
 
 release:
   name_template: "Helm Kanvas Snapshot {{.Tag}}"
+
+after:
+  hooks:
+    - echo "GoReleaser has successfully completed the build and release process!"
+    - echo "TEST_VAR value: {{ .Env.TEST_VAR }}"
+
