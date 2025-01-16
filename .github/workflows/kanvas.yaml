@@ -11,7 +11,7 @@ name: Kanvas Screenshot Service
       application_type:
         description: Type of the application (e.g., Helm Chart, Kubernetes Manifest, Docker Compose)
         type: string
-        default: "Kubernetes Manifest"
+        default: "Helm Chart"
       application_url:
         description: Design's source URI; location of the original manifests
         type: string
@@ -59,9 +59,9 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
           mesheryToken: ${{ secrets.GH_ACCESS_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
           prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
-          application_type: ${{ inputs.application_type }} # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
+          application_type: ${{ inputs.application_type || 'Helm Chart' }} # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
           assetLocation: ${{ inputs.assetLocation }}
           designID: ${{ inputs.designID }}
-          application_url: 'https://charts.bitnami.com/bitnami/nginx-13.2.33.tgz' # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
+          application_url: ${{ env.PULL_NO != '0' && 'https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz' }} # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
 
 
