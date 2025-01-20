@@ -10,7 +10,6 @@
 <!-- TODO: NEW PAGE NEEDED HERE: - CLI Plugins:  -->
 
 
-
 **Table of Contents**
 
 - [Meshery Extension: Kanvas Snapshot Helm Plugin](#meshery-extension-kanvas-snapshot-helm-plugin)
