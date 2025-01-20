@@ -84,7 +84,7 @@ helm helm-kanvas-snapshot -f <chart-URI> [--name <snapshot-name>] [-e <email>]
 To generate a snapshot for a Helm chart located at `https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz`, you can use:
 
 ```bash
-helm helm-kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz --name meshery-chart
+helm helm-kanvas-snapshot -f https://meshery.github.io/meshery.io/charts/meshery-v0.7.109.tgz --name meshery-chart
 ```
 
 ## Contributing
@@ -157,7 +157,7 @@ Please do! We're a warm and welcoming community of open source contributors. Ple
 ### Show Your Support
 
 <p align="center">
-  <i>If you like Meshery, please <a href="../../stargazers">★</a> star this repository to show your support! 🤩</i>
+  <i>If you like Helm kanvas Snapshot, please <a href="../../stargazers">★</a> star this repository to show your support! 🤩</i>
 </p>
 
 ### License
