@@ -121,6 +121,9 @@ make local.build
 ```bash
 ./helm-kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz
 ```
+
+This command will trigger the snapshot generation process. If everything is set up correctly, you should see a visual snapshot URL or receive the snapshot via email, depending on the options you specified.
+
 <div>&nbsp;</div>
 
 ## Join the Meshery community!
