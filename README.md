@@ -10,7 +10,6 @@
 <!-- TODO: NEW PAGE NEEDED HERE: - CLI Plugins:  -->
 
 
-
 **Table of Contents**
 
 - [Meshery Extension: Kanvas Snapshot Helm Plugin](#meshery-extension-kanvas-snapshot-helm-plugin)
@@ -46,8 +45,6 @@ To install the Meshery Snapshot Helm Plugin, use the following steps:
 
 - `helm` must be [installed]( helm plugin install https://github.com/meshery/helm-kanvas-snapshot) on your system.
 - (Optional) A free [Layer5 Cloud](https://cloud.layer5.io) user account.
-- Environemnt Variables:
-    1. ...?
 
 **Plugin Installation**
 
@@ -63,10 +60,13 @@ To install the Meshery Snapshot Helm Plugin, use the following steps:
    helm plugin list
    ```
 
-   You should see the Kanvas Snapshot listed as `snapshot`.
+   You should see the Kanvas Snapshot listed as `helm-kanvas-snapshot`.
 
-4. Set up the required environment variables (see the [Environment Variables](#environment-variables) section).
+Update to the latest version:
 
+```bash
+helm plugin update helm-kanvas-snapshot
+```
 ### Usage
 
 Once the plugin is installed, you can generate a snapshot using either a packaged or unpackaged Helm chart.
@@ -77,28 +77,29 @@ helm helm-kanvas-snapshot -f <chart-URI> [--name <snapshot-name>] [-e <email>]
 
 - **`-f`**, **`--file`**: (required) path or URL to the Helm chart (required).
 - **`--name`**: (optional) name for the snapshot. If not provided, a name will be auto-generated based on the chart name.
-- **`-e`, **`--email`**: (optional) email address to notify when snapshot is ready. If not provided, a link to the snapshot will be displayed in the terminal.
+-  **`-e`**, **`--email`**: (optional) email address to notify when snapshot is ready. If not provided, a link to the snapshot will be displayed in the terminal.
 
 **Example**
 
-To generate a snapshot for a Helm chart located at `https://meshery.io/charts/v0.8.0-meshery.tar.gz`, you can use:
+To generate a snapshot for a Helm chart located at `https://meshery.io/charts/meshery-v0.8.12.tgz`, you can use:
 
 ```bash
-helm helm-kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz --name meshery-chart
+helm helm-kanvas-snapshot -f https://meshery.io/charts/meshery-v0.8.12.tgz --name meshery-chart
 ```
 
 ## Contributing
 
 Please do! Thank you for your help in improving this Meshery extension! :balloon:
 
-Start by forking the repository.
+Start by forking the repository. After making your changes, submit a pull request. For more information, see the [Contributing Guide](CONTRIBUTING.md).
+
 
 **1. Fork the Repository**
 
 To get started, you'll first need to clone the Meshery Snapshot Helm Plugin repository from GitHub. Run the following command in your terminal:
 
 ```bash
-git clone https://github.com/layer5labs/meshery-extensions-packages.git
+git clone https://github.com/meshery/helm-kanvas-snapshot.git
 ```
 
 **2. Navigate to the Plugin Directory**
@@ -109,41 +110,19 @@ Once the repository is cloned, navigate to the `helm-kanvas-snapshot` directory.
 cd helm-kanvas-snapshot
 ```
 
-**3. Replace the placeholder values with your actual credentials.**
-
-**4. Build the binary**
+**4. Build the binary locally**
 
 ```bash
-make
+make local.build
 ```
 
-**5. Install the Snapshot plugin**
+**5. Test the binary**
 
 ```bash
-helm plugin install kanvas-snapshot
-```
-
-**6. Test the Plugin Locally**
-
-Once the plugin is built, you can test it locally. For example, to generate a snapshot for a Helm chart, run the following command:
-
-```bash
-helm helm-kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz --name meshery-chart
+./helm-kanvas-snapshot -f https://meshery.io/charts/v0.8.0-meshery.tar.gz
 ```
 
 This command will trigger the snapshot generation process. If everything is set up correctly, you should see a visual snapshot URL or receive the snapshot via email, depending on the options you specified.
-
-**7. Debugging**
-
-If you encounter any issues during testing, check the log file generated in the `snapshot-plugin` directory. The logs can provide more insight into any errors that may occur.
-
-To check the logs, open the log file in your preferred text editor:
-
-```bash
-cat snapshot.log
-```
-
-This file contains a timestamped log of operations performed during the snapshot generation process.
 
 <div>&nbsp;</div>
 
@@ -205,7 +184,7 @@ Please do! We're a warm and welcoming community of open source contributors. Ple
 ### Show Your Support
 
 <p align="center">
-  <i>If you like Meshery, please <a href="../../stargazers">★</a> star this repository to show your support! 🤩</i>
+  <i>If you like Helm kanvas Snapshot, please <a href="../../stargazers">★</a> star this repository to show your support! 🤩</i>
 </p>
 
 ### License
