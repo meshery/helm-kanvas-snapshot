@@ -245,7 +245,7 @@ func Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL, workflowAcce
 
 	if err := generateKanvasSnapshotCmd.Execute(); err != nil {
 		errors.ErrHTTPPostRequest(err)
-		generateKanvasSnapshotCmd.SetFlagErrorFunc(func(cmd *cobra.Command, err error) error {
+		generateKanvasSnapshotCmd.SetFlagErrorFunc(func(_ *cobra.Command, _ error) error {
 			return nil
 		})
 	}
