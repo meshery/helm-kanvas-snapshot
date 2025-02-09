@@ -30,7 +30,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@master
         with:
-          go-version: "1.21"
+          go-version: "1.23"
 
       - name: Build Error Utility
         run: |
@@ -50,7 +50,7 @@ jobs:
         run: git pull origin master
 
       - name: Commit changes
-        if: ${{ github.event_name != 'pull_request' }}  # Skip for pull requests
+        if: ${{ github.event_name != 'pull_request' }} # Skip for pull requests
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           file_pattern: helpers
@@ -59,3 +59,4 @@ jobs:
           commit_author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           commit_options: "--signoff"
           commit_message: "[Error Codes]: Update Helm Kanvas Snapshot error codes and reference"
+

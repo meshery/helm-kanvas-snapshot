@@ -6,7 +6,7 @@ on:
 
   workflow_dispatch:
 
-  pull_request:  # Add this to trigger on PR events
+  pull_request: # Add this to trigger on PR events
     branches:
       - install-script-enhancement
 
@@ -25,7 +25,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.21"
+          go-version: "1.23"
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -38,10 +38,11 @@ jobs:
       - name: Run GoReleaser with tag
         uses: goreleaser/goreleaser-action@v6
         with:
-          version: 2  # Use latest GoReleaser action version
-          args: release --clean --skip validate -f .github/.goreleaser.yml  # Corrected filename to root
+          version: 2 # Use latest GoReleaser action version
+          args: release --clean --skip validate -f .github/.goreleaser.yml # Corrected filename to root
         env:
           RELEASE_CHANNEL: "stable"
           PROVIDER_TOKEN: ${{ secrets.PROVIDER_TOKEN }}
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
