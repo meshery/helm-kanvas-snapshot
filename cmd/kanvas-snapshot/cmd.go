@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -153,9 +152,7 @@ func CreateMesheryDesign(uri, name, email string) (string, error) {
 		return "", errors.ErrDecodingAPI(err)
 	}
 
-	sourceType := "Helm Chart"
-	encodedChartType := url.PathEscape(sourceType)
-	fullURL := fmt.Sprintf("%s/api/pattern/%s", MesheryAPIBaseURL, encodedChartType)
+	fullURL := fmt.Sprintf("%s/api/pattern/import", MesheryAPIBaseURL)
 
 	// Create the request
 	req, err := http.NewRequest("POST", fullURL, bytes.NewBuffer(payloadBytes))
