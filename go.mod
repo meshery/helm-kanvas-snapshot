@@ -2,8 +2,6 @@ module github.com/meshery/helm-kanvas-snapshot
 
 go 1.23.4
 
-toolchain go1.23.5
-
 require (
 	github.com/layer5io/meshkit v0.8.8
 	github.com/sirupsen/logrus v1.9.3
