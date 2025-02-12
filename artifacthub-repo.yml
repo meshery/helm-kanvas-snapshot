@@ -9,7 +9,7 @@
 # when the hash of the last commit in the branch you set up changes. This does
 # NOT apply to ownership claim operations, which are processed immediately.
 #
-repositoryID: 1b4e2e51-4979-43c4-a164-c26426c196b2
+repositoryID: 38b16577-a167-4086-9395-0d693db1b590
 owners: # (optional, used to claim repository ownership)
   - name: meshery
     email: maintainers@meshery.io
