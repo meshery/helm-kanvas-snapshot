@@ -74,13 +74,13 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 
 		if email == "" {
 			// loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
-			Log.Info("\nSnapshot generated. Snapshot URL: %s\n", assetLocation)
+			Log.Infof("\nSnapshot generated. Snapshot URL: %s\n", assetLocation)
 		} else {
 			err = sendKanvasSnapshotEmail(email, assetLocation)
 			if err != nil {
 				handleError(errors.ErrSendingSnapshotEmail(err, email))
 			}
-			Log.Info("You will be notified via email at %s when your snapshot is ready.", email)
+			Log.Infof("You will be notified via email at %s when your snapshot is ready.", email)
 		}
 		return nil
 	},
