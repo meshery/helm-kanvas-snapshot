@@ -74,9 +74,13 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 
 		if email == "" {
 			// loader(2*time.Minute + 40*time.Second) // Loader running for 2 minutes and 40 seconds
-			Log.Infof("\nSnapshot generated. Snapshot URL: %s\n", assetLocation)
+			Log.Info("\nSnapshot generated. Snapshot URL: %s\n", assetLocation)
 		} else {
-			Log.Info("You will be notified via email when your snapshot is ready.")
+			err = sendKanvasSnapshotEmail(email, assetLocation)
+			if err != nil {
+				handleError(errors.ErrSendingSnapshotEmail(err, email))
+			}
+			Log.Info("You will be notified via email at %s when your snapshot is ready.", email)
 		}
 		return nil
 	},
@@ -87,6 +91,12 @@ type MesheryDesignPayload struct {
 	URL   string `json:"url"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
+}
+
+type SendSnapshotEmailPayload struct {
+	To        string `json:"to"`
+	Subject   string `json:"subject"`
+	ImageURI  string `json:"image_uri"`
 }
 
 // func loader(duration time.Duration) {
@@ -228,6 +238,51 @@ func GenerateSnapshot(contentID, assetLocation string, ghAccessToken string) err
 func isValidEmail(email string) bool {
 	return emailRegex.MatchString(email)
 }
+
+func sendKanvasSnapshotEmail(email, imageUri string) error {
+	payload := SendSnapshotEmailPayload{
+		To: email,
+		Subject: "Kanvas Design Snapshot",
+		ImageURI: imageUri,
+	}
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		Log.Info("Failed to marshal payload:", err)
+		return errors.ErrDecodingAPI(err)
+	}
+	fullURL := fmt.Sprintf("%s/api/integrations/snapshot/email", MesheryCloudAPIBaseURL)
+
+	// Create the request
+	req, err := http.NewRequest("POST", fullURL, bytes.NewBuffer(payloadBytes))
+	if err != nil {
+		Log.Info("Failed to create new request:", err)
+		return errors.ErrHTTPPostRequest(err)
+	}
+
+	req.Header.Set("Cookie", fmt.Sprintf("provider_token=%s", ProviderToken))
+	req.Header.Set("Origin", MesheryCloudAPIBaseURL)
+	req.Header.Set("Host", MesheryCloudAPIBaseURL)
+	req.Header.Set("Content-Type", "text/plain;charset=UTF-8")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, br, zstd")
+	req.Header.Set("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8")
+
+
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return errors.ErrHTTPPostRequest(err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return errors.ErrUnexpectedResponseCode(resp.StatusCode, string(body))
+	}
+	return nil
+}
+
 
 func Main(providerToken, mesheryCloudAPIBaseURL, mesheryAPIBaseURL, workflowAccessToken string) {
 	ProviderToken = providerToken
