@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# include build/Makefile.core.mk
+include helpers/Makefile.core.mk
 
 
 .PHONY: all
@@ -81,7 +81,8 @@ local.check: local.fmt ## Loads all dependencies
 	@go mod tidy
 
 local.build: local.check ## Generates the artifact with 'go build'
-	@go build -o $(APP_NAME) -ldflags="-s -w"
+	@go build -o $(APP_NAME) -ldflags="-s -w -X 'main.providerToken=$(PROVIDER_TOKEN)' -X 'main.mesheryCloudAPIBaseURL=$(MESHERY_CLOUD_API_BASE_URL)'  -X 'main.mesheryAPIBaseURL=$(MESHERY_API_BASE_URL)'"
+
 
 local.snapshot: local.check ## Generates the artifact with 'go build'
 	GOVERSION=${GOVERSION} BUILD_ENVIRONMENT=${BUILD_ENVIRONMENT} goreleaser build --snapshot --clean

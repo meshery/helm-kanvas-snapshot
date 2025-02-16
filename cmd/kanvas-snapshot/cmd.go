@@ -80,7 +80,7 @@ var generateKanvasSnapshotCmd = &cobra.Command{
 			if err != nil {
 				handleError(errors.ErrSendingSnapshotEmail(err, email))
 			}
-			Log.Infof("You will be notified via email at %s when your snapshot is ready.", email)
+			Log.Infof("\nYou will be notified via email at %s when your Kanvas snapshot is ready.", email)
 		}
 		return nil
 	},
