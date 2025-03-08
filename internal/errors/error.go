@@ -15,6 +15,7 @@ var (
 	ErrUnexpectedResponseCodeCode   = "kanvas-snapshot-906"
 	ErrRequiredFieldNotProvidedCode = "kanvas-snapshot-907"
 	ErrInvalidEmailFormatCode       = "kanvas-snapshot-908"
+	ErrSendingSnapshotEmailCode     = "kanvas-snapshot-909"
 )
 
 func ErrInvalidChartURI(err error) error {
@@ -86,5 +87,14 @@ func ErrInvalidEmailFormat(email string) error {
 		[]string{fmt.Sprintf("The provided email '%s' is not a valid email format.", email)},
 		[]string{"The email provided for the Kanvas snapshot request is not in the correct format."},
 		[]string{"Ensure the email address follows the correct format (e.g., user@example.com)."},
+	)
+}
+
+func ErrSendingSnapshotEmail(err error, email string) error {
+	return errors.New(ErrSendingSnapshotEmailCode, errors.Alert,
+		[]string{"Failed to send kanvas snapshot to %s.", email},
+		[]string{err.Error()},
+		[]string{"Failed to send the Kanvas snapshot to the provided email address."},
+		[]string{"Check Meshery Cloud API connection and payload."},
 	)
 }
