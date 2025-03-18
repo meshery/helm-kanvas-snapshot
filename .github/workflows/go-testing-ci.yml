@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         go: [1.23]
-        os: [ubuntu-22.04]
+        os: [ubuntu-24.04]
     name: golangci-lint
     if: github.repository == 'meshery/helm-kanvas-snapshot'
     runs-on: ${{ matrix.os }}
@@ -39,7 +39,7 @@ jobs:
           args: --config=.golangci.yml --timeout=10m
   unit-tests:
     name: Unit tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: golangci
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
           flags: unittests
   integration-tests:
     name: Integration tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: golangci
     steps:
       - uses: actions/checkout@v4
